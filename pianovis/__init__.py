@@ -74,7 +74,7 @@ class Video:
 
             info = [key, white, x_offset + key_width*num_white_before]
             if not white:
-                info[2] -= key_width * (1 - self.options["keys.black.width_fac"]/2)
+                info[2] -= key_width * self.options["keys.black.width_fac"] / 2
             self.key_locs.append(info)
 
         self.key_locs = sorted(self.key_locs, key=(lambda x: 0 if x[1] else 1))
