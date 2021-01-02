@@ -41,6 +41,28 @@ class Video:
         self.res = resolution
         self.fps = fps
         self.midi_paths = []
+        self.gen_info()
+
+    def gen_info(self):
+        width, height = self.res
+        x_size = width * 0.95
+        x_offset = width * 0.025
+        y_offset = height / 2
+        key_width = x_size / 52
+
+        self.key_locs = []
+        for key in range(88):
+            white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
+            num_white_before = 0
+            for k in range(key):
+                curr_white = False if (k-3) % 12 in (1, 3, 6, 8, 10) else True
+                if curr_white:
+                    num_white_before += 1
+
+            info = [white, x_offset + key_width*num_white_before, y_offset]
+            if not white:
+                info[1] += key_width / 2
+            self.key_locs.append(info)
 
     def add_midi(self, path: str) -> None:
         """Adds midi path to list."""
@@ -50,16 +72,7 @@ class Video:
         return 100
 
     def render_piano(self, keys):
-        for key in range(88):
-            white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
-            num_white_before = 0
-
-            for k in range(key):
-                curr_white = False if (k-3) % 12 in (1, 3, 6, 8, 10) else True
-                if curr_white:
-                    num_white_before += 1
-
-            print(key, num_white_before)
+        pass
 
 
     def render(self, frame):
