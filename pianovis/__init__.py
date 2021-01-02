@@ -56,7 +56,7 @@ class Video:
             "keys.white.color": (255, 255, 255),
             "keys.black.width_fac": 0.6,
             "keys.black.height_fac": 0.7,
-            "keys.black.color": (64, 64, 64),
+            "keys.black.color": (255, 0, 0),
         }
 
         # Key positions
@@ -74,7 +74,7 @@ class Video:
 
             info = [key, white, x_offset + key_width*num_white_before]
             if not white:
-                info[1] += key_width / 2
+                info[2] += key_width / 2
             self.key_locs.append(info)
 
         self.key_locs = sorted(self.key_locs, key=(lambda x: 0 if x[1] else 1))
@@ -101,13 +101,14 @@ class Video:
             if white:
                 pygame.draw.rect(surface, self.options["keys.white.color"], (x_loc, self.key_y_loc, width_white, height_white))
             else:
+                print("BLACK")
                 pygame.draw.rect(surface, self.options["keys.black.color"], (x_loc, self.key_y_loc, width_black, height_black))
 
         return surface
 
     def render(self, frame):
         surface = pygame.Surface(self.res)
-        pygame.draw.rect(surface, (255, 255, 255), (10, 10, 100, 100))
+        surface.blit(self.render_piano([]), (0, 0))
         return surface
 
     def export(self, path: str) -> None:
