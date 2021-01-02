@@ -32,26 +32,21 @@ colorama.init()
 class Video:
     """Video class that contains midis and export."""
 
-    res: Tuple[int, int]
-    fps: int
-    midi_paths: List[str]
-    options: Dict
-
     def __init__(self, resolution: Tuple[int, int], fps: int) -> None:
         """Initializes video."""
-        self.res = resolution
-        self.fps = fps
-        self.midi_paths = []
-        self.gen_info()
+        self._res = resolution
+        self._fps = fps
+        self._midi_paths = []
+        self._gen_info()
 
-    def gen_info(self):
-        width, height = self.res
+    def _gen_info(self):
+        width, height = self._res
         x_size = width * 0.95
         x_offset = width * 0.025
         y_offset = height / 2
         key_width = x_size / 52
 
-        self.options = {
+        self._options = {
             "keys.white.gap": 2,
             "keys.white.color": (255, 255, 255),
             "keys.black.width_fac": 0.6,
@@ -60,10 +55,10 @@ class Video:
         }
 
         # Key positions
-        self.key_width = key_width
-        self.key_height = height / 4
-        self.key_y_loc = y_offset
-        self.key_locs = []
+        self._key_width = key_width
+        self._key_height = height / 4
+        self._key_y_loc = y_offset
+        self._key_locs = []
         for key in range(88):
             white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
             num_white_before = 0
@@ -74,40 +69,40 @@ class Video:
 
             info = [key, white, x_offset + key_width*num_white_before]
             if not white:
-                info[2] -= key_width * self.options["keys.black.width_fac"] / 2
-            self.key_locs.append(info)
+                info[2] -= key_width * self._options["keys.black.width_fac"] / 2
+            self._key_locs.append(info)
 
-        self.key_locs = sorted(self.key_locs, key=(lambda x: 0 if x[1] else 1))
+        self._key_locs = sorted(self._key_locs, key=(lambda x: 0 if x[1] else 1))
 
     def configure(self, path, value):
-        self.options[path] = value
+        self._options[path] = value
 
     def add_midi(self, path: str) -> None:
         """Adds midi path to list."""
-        self.midi_paths.append(path)
+        self._midi_paths.append(path)
 
-    def calc_num_frames(self):
+    def _calc_num_frames(self):
         return 100
 
-    def render_piano(self, keys):
+    def _render_piano(self, keys):
         surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
-        width_white = self.key_width - self.options["keys.white.gap"]
-        width_black = self.key_width * self.options["keys.black.width_fac"]
-        height_white = self.key_height
-        height_black = self.key_height * self.options["keys.black.height_fac"]
+        width_white = self._key_width - self._options["keys.white.gap"]
+        width_black = self._key_width * self._options["keys.black.width_fac"]
+        height_white = self._key_height
+        height_black = self._key_height * self._options["keys.black.height_fac"]
 
-        for index, white, x_loc in self.key_locs:
+        for index, white, x_loc in self._key_locs:
             playing = index in keys
             if white:
-                pygame.draw.rect(surface, self.options["keys.white.color"], (x_loc, self.key_y_loc, width_white, height_white))
+                pygame.draw.rect(surface, self._options["keys.white.color"], (x_loc, self._key_y_loc, width_white, height_white))
             else:
-                pygame.draw.rect(surface, self.options["keys.black.color"], (x_loc, self.key_y_loc, width_black, height_black))
+                pygame.draw.rect(surface, self._options["keys.black.color"], (x_loc, self._key_y_loc, width_black, height_black))
 
         return surface
 
-    def render(self, frame):
-        surface = pygame.Surface(self.res)
-        surface.blit(self.render_piano([]), (0, 0))
+    def _render(self, frame):
+        surface = pygame.Surface(self._res)
+        surface.blit(self._render_piano([]), (0, 0))
         return surface
 
     def export(self, path: str) -> None:
@@ -120,14 +115,14 @@ class Video:
 
         get_hash = lambda: sha256(str(time.time()).encode()).hexdigest()[:20]
         parent = os.path.realpath(os.path.dirname(__file__))
-        frames = self.calc_num_frames()
+        frames = self._calc_num_frames()
 
         hash = get_hash()
         while os.path.isfile(os.path.join(parent, hash)):
             hash = get_hash()
 
         tmp_path = os.path.join(parent, hash+".png")
-        video = cv2.VideoWriter(path, cv2.VideoWriter_fourcc(*"MPEG"), self.fps, self.res)
+        video = cv2.VideoWriter(path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
 
         print("-" * 50)
         print(f"Exporting video containing {frames} frames:")
@@ -138,7 +133,7 @@ class Video:
                 sys.stdout.flush()
                 sys.stdout.write("{0}{1}{0}".format("\b"*len(msg), " "*len(msg)))
 
-                surface = self.render(frame)
+                surface = self._render(frame)
                 pygame.image.save(surface, tmp_path)
                 video.write(cv2.imread(tmp_path))
 
