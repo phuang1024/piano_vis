@@ -101,7 +101,6 @@ class Video:
             if white:
                 pygame.draw.rect(surface, self.options["keys.white.color"], (x_loc, self.key_y_loc, width_white, height_white))
             else:
-                print("BLACK")
                 pygame.draw.rect(surface, self.options["keys.black.color"], (x_loc, self.key_y_loc, width_black, height_black))
 
         return surface
