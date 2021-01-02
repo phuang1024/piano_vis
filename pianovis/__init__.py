@@ -60,12 +60,12 @@ class Video:
                 if curr_white:
                     num_white_before += 1
 
-            info = [white, x_offset + key_width*num_white_before, y_offset]
+            info = [key, white, x_offset + key_width*num_white_before, y_offset]
             if not white:
                 info[1] += key_width / 2
             self.key_locs.append(info)
 
-        self.key_locs = sorted(self.key_locs, key=(lambda x: 0 if x[0] else 1))
+        self.key_locs = sorted(self.key_locs, key=(lambda x: 0 if x[1] else 1))
 
     def add_midi(self, path: str) -> None:
         """Adds midi path to list."""
@@ -76,7 +76,6 @@ class Video:
 
     def render_piano(self, keys):
         pass
-
 
     def render(self, frame):
         surface = pygame.Surface(self.res)
