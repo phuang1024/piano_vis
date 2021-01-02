@@ -33,7 +33,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "pygame",
-        "opencv-python"
+        "opencv-python",
+        "mido",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
