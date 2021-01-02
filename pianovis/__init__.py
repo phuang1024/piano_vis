@@ -53,12 +53,16 @@ class Video:
 
         self.options = {
             "keys.white.gap": 2,
+            "keys.white.color": (255, 255, 255),
             "keys.black.width_fac": 0.6,
             "keys.black.height_fac": 0.7,
+            "keys.black.color": (64, 64, 64),
         }
 
         # Key positions
         self.key_width = key_width
+        self.key_height = height / 4
+        self.key_y_loc = y_offset
         self.key_locs = []
         for key in range(88):
             white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
@@ -68,7 +72,7 @@ class Video:
                 if curr_white:
                     num_white_before += 1
 
-            info = [key, white, x_offset + key_width*num_white_before, y_offset]
+            info = [key, white, x_offset + key_width*num_white_before]
             if not white:
                 info[1] += key_width / 2
             self.key_locs.append(info)
@@ -86,8 +90,20 @@ class Video:
         return 100
 
     def render_piano(self, keys):
-        for index, white, x_loc, y_loc in self.key_locs:
+        surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
+        width_white = self.key_width - self.options["keys.white.gap"]
+        width_black = self.key_width * self.options["keys.black.width_fac"]
+        height_white = self.key_height
+        height_black = self.key_height * self.options["keys.black.height_fac"]
+
+        for index, white, x_loc in self.key_locs:
             playing = index in keys
+            if white:
+                pygame.draw.rect(surface, self.options["keys.white.color"], (x_loc, self.key_y_loc, width_white, height_white))
+            else:
+                pygame.draw.rect(surface, self.options["keys.black.color"], (x_loc, self.key_y_loc, width_black, height_black))
+
+        return surface
 
     def render(self, frame):
         surface = pygame.Surface(self.res)
