@@ -23,7 +23,7 @@ import cv2
 import mido
 import colorama
 from colorama import Fore
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 from hashlib import sha256
 pygame.init()
 colorama.init()
@@ -35,6 +35,7 @@ class Video:
     res: Tuple[int, int]
     fps: int
     midi_paths: List[str]
+    options: Dict
 
     def __init__(self, resolution: Tuple[int, int], fps: int) -> None:
         """Initializes video."""
@@ -50,7 +51,14 @@ class Video:
         y_offset = height / 2
         key_width = x_size / 52
 
+        self.options = {
+            "keys.white.gap": 2,
+            "keys.black.width_fac": 0.6,
+            "keys.black.height_fac": 0.7,
+        }
+
         # Key positions
+        self.key_width = key_width
         self.key_locs = []
         for key in range(88):
             white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
@@ -67,6 +75,9 @@ class Video:
 
         self.key_locs = sorted(self.key_locs, key=(lambda x: 0 if x[1] else 1))
 
+    def configure(self, path, value):
+        self.options[path] = value
+
     def add_midi(self, path: str) -> None:
         """Adds midi path to list."""
         self.midi_paths.append(path)
@@ -75,7 +86,8 @@ class Video:
         return 100
 
     def render_piano(self, keys):
-        pass
+        for index, white, x_loc, y_loc in self.key_locs:
+            playing = index in keys
 
     def render(self, frame):
         surface = pygame.Surface(self.res)
