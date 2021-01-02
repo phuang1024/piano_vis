@@ -15,16 +15,25 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import os
 import pygame
 import cv2
-from typing import Tuple
+import mido
+from typing import List, Tuple
 
 
 class Video:
     """Video class that contains midis and export."""
+
+    res: Tuple[int, int]
+    fps: int
+    midi_paths: List[str]
 
     def __init__(self, resolution: Tuple[int, int], fps: int) -> None:
         """Initializes video."""
         self.res = resolution
         self.fps = fps
         self.midi_paths = []
+
+    def add_midi(self, path: str) -> None:
+        self.midi_paths.append(path)
