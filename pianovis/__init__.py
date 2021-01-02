@@ -49,8 +49,23 @@ class Video:
     def calc_num_frames(self):
         return 100
 
+    def render_piano(self, keys):
+        for key in range(88):
+            white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
+            num_white_before = 0
+
+            for k in range(key):
+                curr_white = False if (k-3) % 12 in (1, 3, 6, 8, 10) else True
+                if curr_white:
+                    num_white_before += 1
+
+            print(key, num_white_before)
+
+
     def render(self, frame):
-        return pygame.Surface(self.res)
+        surface = pygame.Surface(self.res)
+        pygame.draw.rect(surface, (255, 255, 255), (10, 10, 100, 100))
+        return surface
 
     def export(self, path: str) -> None:
         """
