@@ -49,7 +49,7 @@ class Video:
     def calc_num_frames(self):
         return 100
 
-    def render(self):
+    def render(self, frame):
         return pygame.Surface(self.res)
 
     def export(self, path: str) -> None:
