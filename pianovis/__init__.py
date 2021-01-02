@@ -50,6 +50,7 @@ class Video:
         y_offset = height / 2
         key_width = x_size / 52
 
+        # Key positions
         self.key_locs = []
         for key in range(88):
             white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
@@ -63,6 +64,8 @@ class Video:
             if not white:
                 info[1] += key_width / 2
             self.key_locs.append(info)
+
+        self.key_locs = sorted(self.key_locs, key=(lambda x: 0 if x[0] else 1))
 
     def add_midi(self, path: str) -> None:
         """Adds midi path to list."""
