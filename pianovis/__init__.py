@@ -84,13 +84,7 @@ class Video:
         self._key_y_loc = y_offset
         self._key_locs = []
         for key in range(88):
-            white = self._is_white(key)
-            x_loc = self._find_x_loc(key)
-
-            info = [key, white, x_loc]
-            if not white:
-                info[2] -= key_width * self._options["keys.black.width_fac"] / 2
-            self._key_locs.append(info)
+            self._key_locs.append([key, self._is_white(key), self._find_x_loc(key)])
 
         self._key_locs = sorted(self._key_locs, key=(lambda x: 0 if x[1] else 1))
 
@@ -108,7 +102,10 @@ class Video:
             if self._is_white(k):
                 num_white_before += 1
 
-        return x_offset + key_width*num_white_before
+        loc = x_offset + key_width*num_white_before
+        if not self._is_white(key):
+            loc -= key_width * self._options["keys.black.width_fac"] / 2
+        return loc
 
     def configure(self, path, value):
         self._options[path] = value
@@ -206,10 +203,11 @@ class Video:
 
         return surface
 
-    def export(self, path: str) -> None:
+    def export(self, path: str, frames: int = None) -> None:
         """
         Exports video to path.
         :param path: Path to export, must be .mp4
+        :param frames: Fixed amount of frames to export (set to None to auto detect)
         """
         if not path.endswith(".mp4"):
             raise ValueError("Path must end with .mp4")
@@ -231,7 +229,8 @@ class Video:
 
         # Export frames
         self._parse_midis()
-        frames = self._calc_num_frames()
+        if frames is None:
+            frames = self._calc_num_frames()
         try:
             process = PrintProcess()
             for frame in range(frames):
