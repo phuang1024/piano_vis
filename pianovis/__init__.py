@@ -74,8 +74,10 @@ class Video:
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
-            "blocks.speed": 100,
+            "blocks.speed": 250,
             "blocks.color": (255, 255, 255),
+            "blocks.rounding": 5,
+            "blocks.motion_blur": True,
         }
 
         # Key positions
@@ -185,7 +187,13 @@ class Video:
                 x_loc = self._find_x_loc(key)
                 width = white_width if self._is_white(key) else black_width
                 height = bottom_y - top_y
-                pygame.draw.rect(surface, self._options["blocks.color"], (x_loc+2, top_y, width-4, height))
+
+                color = self._options["blocks.color"]
+                radius = self._options["blocks.rounding"]
+                if self._options["blocks.motion_blur"]:
+                    mb_dist = self._options["blocks.speed"] / self._fps
+                    pygame.draw.rect(surface, (*color, 92), (x_loc, top_y-mb_dist, width-1, height+2*mb_dist), border_radius=radius)
+                pygame.draw.rect(surface, color, (x_loc, top_y, width-1, height), border_radius=radius)
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
@@ -233,12 +241,15 @@ class Video:
             frames = self._calc_num_frames()
         try:
             process = PrintProcess()
+            start = time.time()
             for frame in range(frames):
                 msg = f"Exporting frame {frame} of {frames}"
+                elapse = time.time() - start
+                left = (frames-frame-1) * elapse / (frame+1)
                 percent = (frame+1) / frames
                 progress = int(percent * 50)
                 progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
-                final_msg = "{}{}{}".format(msg, " "*(40-len(msg)), progress_msg)
+                final_msg = "{}{}Remaining: {}    {}".format(msg, " "*(40-len(msg)), str(left)[:4], progress_msg)
                 process.write(final_msg)
 
                 surface = self._render(frame)
@@ -255,6 +266,7 @@ class Video:
         except KeyboardInterrupt:
             print(Fore.RED + "Keyboard interrupt")
             os.remove(tmp_img_path)
+            os.remove(tmp_vid_path)
             return
 
         os.remove(tmp_img_path)
