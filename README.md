@@ -1,5 +1,5 @@
 # Piano Visualizer
-## Version 0.0.5
+## Version 0.0.6
 
 This version exports a piano video with the keys lighting up as the music plays.
 
