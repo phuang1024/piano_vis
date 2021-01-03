@@ -22,7 +22,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="piano-vis",
-    version="0.0.1",
+    version="0.0.2",
     author="Patrick Huang",
     author_email="huangpatrick16777216@gmail.com",
     description="Visualize piano midi files..",
@@ -35,6 +35,7 @@ setuptools.setup(
         "pygame",
         "opencv-python",
         "mido",
+        "colorama",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
