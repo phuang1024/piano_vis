@@ -1,3 +1,6 @@
 *.pyc
 *.vscode
+*.mscz
+*.mid
+
 a.py
