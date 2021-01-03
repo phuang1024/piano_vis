@@ -75,6 +75,7 @@ class Video:
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
             "blocks.speed": 100,
+            "blocks.color": (255, 255, 255),
         }
 
         # Key positions
@@ -172,13 +173,25 @@ class Video:
         return surface
 
     def _render_blocks(self, frame):
+        surface = pygame.Surface(self._res, pygame.SRCALPHA)
         width, height = self._res
-        x_offset = width * 0.025
+        y_offset = height / 2
         white_width = width * 0.95 / 52
         black_width = white_width * self._options["keys.black.width_fac"]
 
-        for note, start, end in self._notes:
-            pass
+        for key, start, end in self._notes:
+            bottom_y = (frame-start)/self._fps*self._options["blocks.speed"] + y_offset
+            top_y = bottom_y - (end-start)/self._fps*self._options["blocks.speed"]
+
+            visible = bottom_y >= 0 and top_y <= y_offset
+            if visible:
+                x_loc = self._find_x_loc(key)
+                width = white_width if self._is_white(key) else black_width
+                height = bottom_y - top_y
+                pygame.draw.rect(surface, self._options["blocks.color"], (x_loc+2, top_y, width-4, height))
+
+        pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
+        return surface
 
     def _render(self, frame):
         surface = pygame.Surface(self._res)
@@ -187,6 +200,8 @@ class Video:
         for note in self._notes:
             if note[1] <= frame <= note[2]:
                 playing.append(note[0])
+
+        surface.blit(self._render_blocks(frame), (0, 0))
         surface.blit(self._render_piano(playing), (0, 0))
 
         return surface
