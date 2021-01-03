@@ -14,6 +14,8 @@ This version exports a piano video with the keys lighting up as the music plays.
     * `video.add_midi(path1)`
     * `video.add_midi(path2)`
     * ...
-4. Export video
+4. Optional: Add an audio file (will use the latest set audio)
+    * `video.set_audio(path)`
+5. Export video
     * `video.export("path.mp4")`
     * The exporting process will take a while.
