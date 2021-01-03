@@ -64,12 +64,12 @@ class Video:
 
         self._options = {
             "keys.white.gap": 2,
-            "keys.white.color": (220, 220, 215),
+            "keys.white.color": (215, 215, 210),
             "keys.white.color_playing": (255, 255, 255),
             "keys.black.width_fac": 0.6,
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
-            "keys.black.color_playing": (72, 72, 72),
+            "keys.black.color_playing": (144, 144, 144),
         }
 
         # Key positions
@@ -183,7 +183,13 @@ class Video:
         try:
             process = PrintProcess()
             for frame in range(frames):
-                process.write(f"Exporting frame {frame} of {frames}")
+                msg = f"Exporting frame {frame} of {frames}"
+                percent = (frame+1) / frames
+                progress = int(percent * 50)
+                progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
+                final_msg = "{}{}{}".format(msg, " "*(40-len(msg)), progress_msg)
+                process.write(final_msg)
+
                 surface = self._render(frame)
                 pygame.image.save(surface, tmp_path)
                 video.write(cv2.imread(tmp_path))
