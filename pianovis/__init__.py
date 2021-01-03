@@ -249,7 +249,7 @@ class Video:
                 percent = (frame+1) / frames
                 progress = int(percent * 50)
                 progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
-                final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:4], progress_msg)
+                final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
                 process.write(final_msg)
 
                 surface = self._render(frame)
