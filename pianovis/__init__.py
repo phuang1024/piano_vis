@@ -74,6 +74,7 @@ class Video:
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
+            "blocks.speed": 100,
         }
 
         # Key positions
@@ -82,19 +83,31 @@ class Video:
         self._key_y_loc = y_offset
         self._key_locs = []
         for key in range(88):
-            white = False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
-            num_white_before = 0
-            for k in range(key):
-                curr_white = False if (k-3) % 12 in (1, 3, 6, 8, 10) else True
-                if curr_white:
-                    num_white_before += 1
+            white = self._is_white(key)
+            x_loc = self._find_x_loc(key)
 
-            info = [key, white, x_offset + key_width*num_white_before]
+            info = [key, white, x_loc]
             if not white:
                 info[2] -= key_width * self._options["keys.black.width_fac"] / 2
             self._key_locs.append(info)
 
         self._key_locs = sorted(self._key_locs, key=(lambda x: 0 if x[1] else 1))
+
+    def _is_white(self, key):
+        return False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
+
+    def _find_x_loc(self, key):
+        width, height = self._res
+        x_size = width * 0.95
+        x_offset = width * 0.025
+        key_width = x_size / 52
+
+        num_white_before = 0
+        for k in range(key):
+            if self._is_white(k):
+                num_white_before += 1
+
+        return x_offset + key_width*num_white_before
 
     def configure(self, path, value):
         self._options[path] = value
@@ -157,6 +170,15 @@ class Video:
                 pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
 
         return surface
+
+    def _render_blocks(self, frame):
+        width, height = self._res
+        x_offset = width * 0.025
+        white_width = width * 0.95 / 52
+        black_width = white_width * self._options["keys.black.width_fac"]
+
+        for note, start, end in self._notes:
+            pass
 
     def _render(self, frame):
         surface = pygame.Surface(self._res)
