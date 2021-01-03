@@ -162,6 +162,7 @@ class Video:
 
         print("-" * 50)
         print(f"Exporting video containing {frames} frames:")
+        self._parse_midis()
         try:
             process = PrintProcess()
             for frame in range(frames):
