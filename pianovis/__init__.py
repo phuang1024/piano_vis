@@ -93,7 +93,11 @@ class Video:
 
     def _parse_midis(self):
         self._notes = []
-        for path in self._midi_paths:
+        num_midis = len(self._midi_paths)
+        process = PrintProcess()
+
+        for i, path in enumerate(self._midi_paths):
+            process.write(f"Parsing midi {i+1} of {num_midis}")
             midi = mido.MidiFile(path)
             tpb = midi.ticks_per_beat
 
@@ -110,6 +114,8 @@ class Video:
                         self._notes.append((note, starts[note], curr_time))
                     else:
                         starts[note] = curr_time
+
+        process.finish(f"Finished parsing {num_midis} midis.")
 
     def _calc_num_frames(self):
         return 100
