@@ -191,8 +191,8 @@ class Video:
                 color = self._options["blocks.color"]
                 radius = self._options["blocks.rounding"]
                 if self._options["blocks.motion_blur"]:
-                    mb_dist = self._options["blocks.speed"] / self._fps
-                    pygame.draw.rect(surface, (*color, 92), (x_loc, top_y-mb_dist, width-1, height+2*mb_dist), border_radius=radius)
+                    mb_dist = self._options["blocks.speed"] / self._fps / 3
+                    pygame.draw.rect(surface, (*color, 92), (x_loc, top_y-mb_dist, width-1, height+mb_dist), border_radius=radius)
                 pygame.draw.rect(surface, color, (x_loc, top_y, width-1, height), border_radius=radius)
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
@@ -249,7 +249,7 @@ class Video:
                 percent = (frame+1) / frames
                 progress = int(percent * 50)
                 progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
-                final_msg = "{}{}Remaining: {}    {}".format(msg, " "*(40-len(msg)), str(left)[:4], progress_msg)
+                final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:4], progress_msg)
                 process.write(final_msg)
 
                 surface = self._render(frame)
