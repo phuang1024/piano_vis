@@ -33,6 +33,8 @@ class PrintProcess:
     def write(self, msg):
         sys.stdout.write(msg)
         sys.stdout.flush()
+
+    def clear(self, msg):
         sys.stdout.write("{0}{1}{0}".format("\b"*len(msg), " "*len(msg)))
 
     def finish(self, msg):
@@ -105,7 +107,8 @@ class Video:
         process = PrintProcess()
 
         for i, path in enumerate(self._midi_paths):
-            process.write(f"Parsing midi {i+1} of {num_midis}")
+            print_msg = f"Parsing midi {i+1} of {num_midis}"
+            process.write(print_msg)
             midi = mido.MidiFile(path)
             tpb = midi.ticks_per_beat
 
@@ -122,6 +125,8 @@ class Video:
                         self._notes.append((note, starts[note], curr_frame))
                     else:
                         starts[note] = curr_frame
+
+            process.clear(print_msg)
 
         process.finish(f"Finished parsing {num_midis} midis.")
 
@@ -193,6 +198,8 @@ class Video:
                 surface = self._render(frame)
                 pygame.image.save(surface, tmp_path)
                 video.write(cv2.imread(tmp_path))
+
+                process.clear(final_msg)
 
             process.finish(f"Finished exporting {frames} frames.")
 
