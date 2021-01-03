@@ -81,6 +81,26 @@ class Video:
         """Adds midi path to list."""
         self._midi_paths.append(path)
 
+    def _parse_midis(self):
+        self._notes = []
+        for path in self._midi_paths:
+            midi = mido.MidiFile(path)
+            tpb = midi.ticks_per_beat
+
+            starts = [None for i in range(88)]
+            tempo = 500000
+            curr_time = 0
+            for msg in midi.tracks[0]:
+                curr_time += msg.time / tpb * tempo / 1000000
+                if msg.is_meta and msg.type == "set_tempo":
+                    tempo = msg.tempo
+                elif msg.type == "note_on":
+                    note, velocity = msg.note-21, msg.velocity
+                    if velocity == 0:
+                        self._notes.append((note, starts[note], curr_time))
+                    else:
+                        starts[note] = curr_time
+
     def _calc_num_frames(self):
         return 100
 
