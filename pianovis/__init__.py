@@ -42,10 +42,16 @@ class PrintProcess:
 class Video:
     """Video class that contains midis and export."""
 
-    def __init__(self, resolution: Tuple[int, int], fps: int) -> None:
-        """Initializes video."""
+    def __init__(self, resolution: Tuple[int, int], fps: int, offset: int) -> None:
+        """
+        Initializes video.
+        :param resolution: Resolution (x, y) of video.
+        :param fps: Frames per second of video.
+        :param offset: Offset (frames) in start time of playing.
+        """
         self._res = resolution
         self._fps = fps
+        self._offset = offset
         self._midi_paths = []
         self._gen_info()
 
@@ -105,23 +111,23 @@ class Video:
 
             starts = [None for i in range(88)]
             tempo = 500000
-            curr_time = 0
+            curr_frame = self._offset
             for msg in midi.tracks[0]:
-                curr_time += msg.time / tpb * tempo / 1000000
+                curr_frame += msg.time / tpb * tempo / 1000000 * self._fps
                 if msg.is_meta and msg.type == "set_tempo":
                     tempo = msg.tempo
                 elif msg.type == "note_on":
                     note, velocity = msg.note-21, msg.velocity
                     if velocity == 0:
-                        self._notes.append((note, starts[note], curr_time))
+                        self._notes.append((note, starts[note], curr_frame))
                     else:
-                        starts[note] = curr_time
+                        starts[note] = curr_frame
 
         process.finish(f"Finished parsing {num_midis} midis.")
 
     def _calc_num_frames(self):
         max_note = max(self._notes, key=(lambda x: x[2]))
-        return max_note * self._fps + 30
+        return max_note + 30
 
     def _render_piano(self, keys):
         surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
@@ -143,7 +149,10 @@ class Video:
 
     def _render(self, frame):
         surface = pygame.Surface(self._res)
+
+        playing = []
         surface.blit(self._render_piano([]), (0, 0))
+
         return surface
 
     def export(self, path: str) -> None:
