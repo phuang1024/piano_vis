@@ -58,10 +58,12 @@ class Video:
 
         self._options = {
             "keys.white.gap": 2,
-            "keys.white.color": (255, 255, 255),
+            "keys.white.color": (230, 230, 225),
+            "keys.white.color_playing": (255, 255, 255),
             "keys.black.width_fac": 0.6,
-            "keys.black.height_fac": 0.7,
+            "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
+            "keys.black.color_playing": (72, 72, 72),
         }
 
         # Key positions
@@ -118,7 +120,8 @@ class Video:
         process.finish(f"Finished parsing {num_midis} midis.")
 
     def _calc_num_frames(self):
-        return 100
+        max_note = max(self._notes, key=(lambda x: x[2]))
+        return max_note * self._fps + 30
 
     def _render_piano(self, keys):
         surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
@@ -130,9 +133,11 @@ class Video:
         for index, white, x_loc in self._key_locs:
             playing = index in keys
             if white:
-                pygame.draw.rect(surface, self._options["keys.white.color"], (x_loc, self._key_y_loc, width_white, height_white))
+                color = self._options["keys.white.color_playing"] if playing else self._options["keys.white.color"]
+                pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
             else:
-                pygame.draw.rect(surface, self._options["keys.black.color"], (x_loc, self._key_y_loc, width_black, height_black))
+                color = self._options["keys.black.color_playing"] if playing else self._options["keys.black.color"]
+                pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
 
         return surface
 
