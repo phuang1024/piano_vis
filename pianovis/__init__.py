@@ -29,6 +29,16 @@ pygame.init()
 colorama.init()
 
 
+class PrintProcess:
+    def write(self, msg):
+        sys.stdout.write(msg)
+        sys.stdout.flush()
+        sys.stdout.write("{0}{1}{0}".format("\b"*len(msg), " "*len(msg)))
+
+    def finish(self, msg):
+        print(Fore.GREEN + msg + Fore.WHITE)
+
+
 class Video:
     """Video class that contains midis and export."""
 
@@ -147,17 +157,14 @@ class Video:
         print("-" * 50)
         print(f"Exporting video containing {frames} frames:")
         try:
+            process = PrintProcess()
             for frame in range(frames):
-                msg = f"Exporting frame {frame} of {frames}"
-                sys.stdout.write(msg)
-                sys.stdout.flush()
-                sys.stdout.write("{0}{1}{0}".format("\b"*len(msg), " "*len(msg)))
-
+                process.write(f"Exporting frame {frame} of {frames}")
                 surface = self._render(frame)
                 pygame.image.save(surface, tmp_path)
                 video.write(cv2.imread(tmp_path))
 
-            print(Fore.GREEN + f"Finished exporting {frames} frames.")
+            process.finish(f"Finished exporting {frames} frames.")
 
             video.release()
             cv2.destroyAllWindows()
