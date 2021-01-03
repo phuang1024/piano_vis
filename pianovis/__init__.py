@@ -64,7 +64,7 @@ class Video:
 
         self._options = {
             "keys.white.gap": 2,
-            "keys.white.color": (230, 230, 225),
+            "keys.white.color": (220, 220, 215),
             "keys.white.color_playing": (255, 255, 255),
             "keys.black.width_fac": 0.6,
             "keys.black.height_fac": 0.65,
@@ -127,7 +127,7 @@ class Video:
 
     def _calc_num_frames(self):
         max_note = max(self._notes, key=(lambda x: x[2]))
-        return max_note + 30
+        return int(max_note[2] + 30)
 
     def _render_piano(self, keys):
         surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
@@ -151,7 +151,10 @@ class Video:
         surface = pygame.Surface(self._res)
 
         playing = []
-        surface.blit(self._render_piano([]), (0, 0))
+        for note in self._notes:
+            if note[1] <= frame <= note[2]:
+                playing.append(note[0])
+        surface.blit(self._render_piano(playing), (0, 0))
 
         return surface
 
@@ -165,7 +168,6 @@ class Video:
 
         get_hash = lambda: sha256(str(time.time()).encode()).hexdigest()[:20]
         parent = os.path.realpath(os.path.dirname(__file__))
-        frames = self._calc_num_frames()
 
         hash = get_hash()
         while os.path.isfile(os.path.join(parent, hash)):
@@ -175,8 +177,9 @@ class Video:
         video = cv2.VideoWriter(path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
 
         print("-" * 50)
-        print(f"Exporting video containing {frames} frames:")
+        print(f"Exporting video:")
         self._parse_midis()
+        frames = self._calc_num_frames()
         try:
             process = PrintProcess()
             for frame in range(frames):
