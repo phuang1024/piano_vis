@@ -17,6 +17,7 @@
 
 import sys
 import os
+import shutil
 import time
 import pygame
 import cv2
@@ -55,6 +56,7 @@ class Video:
         self._fps = fps
         self._offset = offset
         self._midi_paths = []
+        self._audio_path = None
         self._gen_info()
 
     def _gen_info(self):
@@ -100,6 +102,10 @@ class Video:
     def add_midi(self, path: str) -> None:
         """Adds midi path to list."""
         self._midi_paths.append(path)
+
+    def set_audio(self, path: str) -> None:
+        """Sets audio file."""
+        self._audio_path = path
 
     def _parse_midis(self):
         self._notes = []
@@ -171,18 +177,22 @@ class Video:
         if not path.endswith(".mp4"):
             raise ValueError("Path must end with .mp4")
 
+        print("-" * 50)
+        print(f"Exporting video:")
+
+        # Setup export
         get_hash = lambda: sha256(str(time.time()).encode()).hexdigest()[:20]
         parent = os.path.realpath(os.path.dirname(__file__))
 
         hash = get_hash()
-        while os.path.isfile(os.path.join(parent, hash)):
+        while os.path.isfile(os.path.join(parent, hash+".png")) or os.path.isfile(os.path.join(parent, hash+".mp4")):
             hash = get_hash()
 
-        tmp_path = os.path.join(parent, hash+".png")
-        video = cv2.VideoWriter(path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
+        tmp_img_path = os.path.join(parent, hash+".png")
+        tmp_vid_path = os.path.join(parent, hash+".mp4")
+        video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
 
-        print("-" * 50)
-        print(f"Exporting video:")
+        # Export frames
         self._parse_midis()
         frames = self._calc_num_frames()
         try:
@@ -196,8 +206,8 @@ class Video:
                 process.write(final_msg)
 
                 surface = self._render(frame)
-                pygame.image.save(surface, tmp_path)
-                video.write(cv2.imread(tmp_path))
+                pygame.image.save(surface, tmp_img_path)
+                video.write(cv2.imread(tmp_img_path))
 
                 process.clear(final_msg)
 
@@ -208,6 +218,19 @@ class Video:
 
         except KeyboardInterrupt:
             print(Fore.RED + "Keyboard interrupt")
+            os.remove(tmp_img_path)
+            return
 
-        os.remove(tmp_path)
+        os.remove(tmp_img_path)
+
+        # Combine audio and video
+        if self._audio_path is not None:
+            print(Fore.WHITE + "Combining with audio")
+            command = "ffmpeg -y -i {} -r {} -i {} -filter:a aresample=async=1 -c:a aac -c:v copy {}"
+            command = command.format(self._audio_path, self._fps, tmp_vid_path, path)
+            os.system(command)
+        else:
+            shutil.copy(tmp_vid_path, path)
+        os.remove(tmp_vid_path)
+
         print(Fore.WHITE + "-" * 50)
