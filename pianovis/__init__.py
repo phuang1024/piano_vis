@@ -45,6 +45,7 @@ class PrintProcess:
 
 class Video:
     """Video class that contains midis and export."""
+    _piano_subdiv_res = 50
 
     def __init__(self, resolution: Tuple[int, int], fps: int, offset: int) -> None:
         """
@@ -162,6 +163,11 @@ class Video:
         return int(max_note[2] + 30)
 
     def _render_piano(self, keys):
+        def calc_color_mix(col1, col2, fac):
+            diff = [col2[i]-col1[i] for i in range(3)]
+            color = [col1[i]+diff[i]*fac for i in range(3)]
+            return color
+
         surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         width_white = self._key_width - self._options["keys.white.gap"]
         width_black = self._key_width * self._options["keys.black.width_fac"]
@@ -170,13 +176,25 @@ class Video:
 
         for index, white, x_loc in self._key_locs:
             playing = index in keys
-            if white:
-                color = self._options["keys.white.color_playing"] if playing else self._options["keys.white.color"]
-                pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
-            else:
-                color = self._options["keys.black.color_playing"] if playing else self._options["keys.black.color"]
-                pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
+            if self._options["blocks.color_type"] == "SOLID":
+                if white:
+                    color = self._options["keys.white.color_playing"] if playing else self._options["keys.white.color"]
+                    pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
+                else:
+                    color = self._options["keys.black.color_playing"] if playing else self._options["keys.black.color"]
+                    pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
+            elif self._options["blocks.color_type"] == "RAINBOW":
+                color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
+                width = width_white if white else width_black
+                height = height_white if white else height_black
+                height_inc = height / self._piano_subdiv_res
+                height /= self._piano_subdiv_res
+                height += 1
+                for i in range(self._piano_subdiv_res):
+                    curr_col = calc_color_mix(self._get_rainbow_color(index), color, i/self._piano_subdiv_res)
+                    pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
 
+        pygame.draw.rect(surface, (0, 0, 0), (0, self._res[1]/4*3, self._res[0], self._res[1]/4))
         return surface
 
     def _render_blocks(self, frame):
