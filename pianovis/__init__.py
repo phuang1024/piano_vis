@@ -275,16 +275,6 @@ class Video:
         if frames is None:
             frames = self._calc_num_frames()
 
-        # Render surfaces
-        process = PrintProcess()
-        surfaces = []
-        for frame in range(frames):
-            msg = f"Rendering frame {frame} of {frames}"
-            process.write(msg)
-            surfaces.append(self._render(frame))
-            process.clear(msg)
-        process.finish(f"Finished rendering {frames} frames.")
-
         # Export frames
         tmp_img_path = os.path.join(parent, hash+".png")
         tmp_vid_path = os.path.join(parent, hash+".mp4")
@@ -293,8 +283,8 @@ class Video:
         try:
             process = PrintProcess()
             start = time.time()
-            for i, surf in enumerate(surfaces):
-                msg = f"Encoding frame {i} of {frames}"
+            for i in range(frames):
+                msg = f"Exporting frame {i} of {frames}"
                 elapse = time.time() - start
                 left = (frames-i-1) * elapse / (i+1)
                 percent = (i+1) / frames
@@ -303,12 +293,13 @@ class Video:
                 final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
                 process.write(final_msg)
 
+                surf = self._render(i)
                 pygame.image.save(surf, tmp_img_path)
                 video.write(cv2.imread(tmp_img_path))
 
                 process.clear(final_msg)
 
-            process.finish(f"Finished encoding {frames} frames.")
+            process.finish(f"Finished exporting {frames} frames.")
 
             video.release()
             cv2.destroyAllWindows()
