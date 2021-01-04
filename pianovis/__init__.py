@@ -54,7 +54,7 @@ class Video:
         """
         self._res = resolution
         self._fps = fps
-        self._offset = offset
+        self._offset = offset - 2
         self._midi_paths = []
         self._audio_path = None
         self._gen_info()
@@ -74,7 +74,7 @@ class Video:
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
-            "blocks.speed": 250,
+            "blocks.speed": 200,
             "blocks.color": (255, 255, 255),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
