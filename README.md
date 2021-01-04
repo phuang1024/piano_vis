@@ -1,5 +1,5 @@
 # Piano Visualizer
-## Version 0.0.6
+## Version 0.0.7
 
 This version exports a piano video with the keys lighting up as the music plays.
 
@@ -32,6 +32,7 @@ This version exports a piano video with the keys lighting up as the music plays.
 * `keys.black.color`: Color (RGB) of black keys.
 * `keys.black.color_playing`: Color (RGB) of black keys when playing.
 * `blocks.speed`: Speed of falling blocks (pixels per second).
+* `blocks.color_type`: Type of block coloring.
 * `blocks.color`: Color (RGB) of blocks.
 * `blocks.rounding`: Pixel width of rounding corners.
 * `blocks.motion_blur`: Use motion blur on blocks?
