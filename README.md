@@ -16,6 +16,7 @@ This version exports a piano video with the keys lighting up as the music plays.
     * ...
 4. Optional: Add an audio file (will use the latest set audio)
     * `video.set_audio(path)`
+    * Your system must have FFMpeg to be able to export with audio.
 5. Export video
     * `video.export("path.mp4")`
     * The exporting process will take a while.
