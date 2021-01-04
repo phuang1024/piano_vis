@@ -22,6 +22,7 @@ import time
 import pygame
 import cv2
 import mido
+import colorsys
 import colorama
 from colorama import Fore
 from typing import Dict, List, Tuple
@@ -75,6 +76,7 @@ class Video:
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
             "blocks.speed": 200,
+            "blocks.color_type": "SOLID",
             "blocks.color": (255, 255, 255),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
@@ -119,6 +121,12 @@ class Video:
     def set_audio(self, path: str) -> None:
         """Sets audio file."""
         self._audio_path = path
+
+    def _get_rainbow_color(self, key):
+        hue = key / 88
+        color = colorsys.hsv_to_rgb(hue, 0.8, 1)
+        color = [255 * x for x in color]
+        return color
 
     def _parse_midis(self):
         self._notes = []
@@ -188,7 +196,13 @@ class Video:
                 width = white_width if self._is_white(key) else black_width
                 height = bottom_y - top_y
 
-                color = self._options["blocks.color"]
+                if self._options["blocks.color_type"] == "SOLID":
+                    color = self._options["blocks.color"]
+                elif self._options["blocks.color_type"] == "RAINBOW":
+                    color = self._get_rainbow_color(key)
+                else:
+                    color = (255, 255, 255)
+
                 radius = self._options["blocks.rounding"]
                 if self._options["blocks.motion_blur"]:
                     mb_dist = self._options["blocks.speed"] / self._fps / 3
