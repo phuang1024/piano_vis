@@ -22,6 +22,7 @@ This version exports a piano video with the keys lighting up as the music plays.
     * The exporting process will take a while.
 
 ### Customization:
+#### Note: Default parameters are optimized for (1920, 1080) resolution.
 `video.configure(path, value)`
 * `keys.white.gap`: Gap between each white key (pixels).
 * `keys.white.color`: Color (RGB) of white keys.
