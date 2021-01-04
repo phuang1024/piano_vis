@@ -76,7 +76,7 @@ class Video:
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
-            "blocks.speed": 200,
+            "blocks.speed": 170,
             "blocks.color_type": "SOLID",
             "blocks.color": (255, 255, 255),
             "blocks.rounding": 5,
