@@ -20,3 +20,17 @@ This version exports a piano video with the keys lighting up as the music plays.
 5. Export video
     * `video.export("path.mp4")`
     * The exporting process will take a while.
+
+### Customization:
+`video.configure(path, value)`
+* `keys.white.gap`: Gap between each white key (pixels).
+* `keys.white.color`: Color (RGB) of white keys.
+* `keys.white.color_playing`: Color (RGB) of white keys when playing.
+* `keys.black.width_fac`: Factor of white key width.
+* `keys.black.height_fac`: Factor of white key height.
+* `keys.black.color`: Color (RGB) of black keys.
+* `keys.black.color_playing`: Color (RGB) of black keys when playing.
+* `blocks.speed`: Speed of falling blocks (pixels per second).
+* `blocks.color`: Color (RGB) of blocks.
+* `blocks.rounding`: Pixel width of rounding corners.
+* `blocks.motion_blur`: Use motion blur on blocks?
