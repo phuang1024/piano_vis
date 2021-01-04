@@ -176,12 +176,20 @@ class Video:
 
         for index, white, x_loc in self._key_locs:
             playing = index in keys
-            if self._options["blocks.color_type"] == "SOLID":
+
+            if not playing:
+                color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
                 if white:
-                    color = self._options["keys.white.color_playing"] if playing else self._options["keys.white.color"]
                     pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
                 else:
-                    color = self._options["keys.black.color_playing"] if playing else self._options["keys.black.color"]
+                    pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
+                return
+
+            if self._options["blocks.color_type"] == "SOLID":
+                color = self._options["keys.white.color_playing"] if white else self._options["keys.black.color_playing"]
+                if white:
+                    pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
+                else:
                     pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
             elif self._options["blocks.color_type"] == "RAINBOW":
                 color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
