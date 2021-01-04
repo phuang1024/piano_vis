@@ -183,24 +183,24 @@ class Video:
                     pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
                 else:
                     pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
-                return
 
-            if self._options["blocks.color_type"] == "SOLID":
-                color = self._options["keys.white.color_playing"] if white else self._options["keys.black.color_playing"]
-                if white:
-                    pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
-                else:
-                    pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
-            elif self._options["blocks.color_type"] == "RAINBOW":
-                color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
-                width = width_white if white else width_black
-                height = height_white if white else height_black
-                height_inc = height / self._piano_subdiv_res
-                height /= self._piano_subdiv_res
-                height += 1
-                for i in range(self._piano_subdiv_res):
-                    curr_col = calc_color_mix(self._get_rainbow_color(index), color, i/self._piano_subdiv_res)
-                    pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
+            else:
+                if self._options["blocks.color_type"] == "SOLID":
+                    color = self._options["keys.white.color_playing"] if white else self._options["keys.black.color_playing"]
+                    if white:
+                        pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
+                    else:
+                        pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
+                elif self._options["blocks.color_type"] == "RAINBOW":
+                    color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
+                    width = width_white if white else width_black
+                    height = height_white if white else height_black
+                    height_inc = height / self._piano_subdiv_res
+                    height /= self._piano_subdiv_res
+                    height += 1
+                    for i in range(self._piano_subdiv_res):
+                        curr_col = calc_color_mix(self._get_rainbow_color(index), color, i/self._piano_subdiv_res)
+                        pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
 
         pygame.draw.rect(surface, (0, 0, 0), (0, self._res[1]/4*3, self._res[0], self._res[1]/4))
         return surface
