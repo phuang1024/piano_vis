@@ -271,34 +271,44 @@ class Video:
         while os.path.isfile(os.path.join(parent, hash+".png")) or os.path.isfile(os.path.join(parent, hash+".mp4")):
             hash = get_hash()
 
+        self._parse_midis()
+        if frames is None:
+            frames = self._calc_num_frames()
+
+        # Render surfaces
+        process = PrintProcess()
+        surfaces = []
+        for frame in range(frames):
+            msg = f"Rendering frame {frame} of {frames}"
+            process.write(msg)
+            surfaces.append(self._render(frame))
+            process.clear(msg)
+        process.finish(f"Finished rendering {frames} frames.")
+
+        # Export frames
         tmp_img_path = os.path.join(parent, hash+".png")
         tmp_vid_path = os.path.join(parent, hash+".mp4")
         video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
 
-        # Export frames
-        self._parse_midis()
-        if frames is None:
-            frames = self._calc_num_frames()
         try:
             process = PrintProcess()
             start = time.time()
-            for frame in range(frames):
-                msg = f"Exporting frame {frame} of {frames}"
+            for i, surf in enumerate(surfaces):
+                msg = f"Encoding frame {i} of {frames}"
                 elapse = time.time() - start
-                left = (frames-frame-1) * elapse / (frame+1)
-                percent = (frame+1) / frames
+                left = (frames-i-1) * elapse / (i+1)
+                percent = (i+1) / frames
                 progress = int(percent * 50)
                 progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
                 final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
                 process.write(final_msg)
 
-                surface = self._render(frame)
-                pygame.image.save(surface, tmp_img_path)
+                pygame.image.save(surf, tmp_img_path)
                 video.write(cv2.imread(tmp_img_path))
 
                 process.clear(final_msg)
 
-            process.finish(f"Finished exporting {frames} frames.")
+            process.finish(f"Finished encoding {frames} frames.")
 
             video.release()
             cv2.destroyAllWindows()
