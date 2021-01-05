@@ -36,3 +36,11 @@ This version exports a piano video with the keys lighting up as the music plays.
 * `blocks.color`: Color (RGB) of blocks.
 * `blocks.rounding`: Pixel width of rounding corners.
 * `blocks.motion_blur`: Use motion blur on blocks?
+
+### Frequently Asked Questions (FAQs)
+* How do I export a video?
+    * Read the "How To Use" section above.
+* Am I allowed to put exported videos online?
+    * Yes. Piano-vis is licensed under GPL v3, which allows you to use it for any purpose without credit (though it is appreciated).
+* Why does it say ffmpeg is not found?
+    * Piano-vis uses ffmpeg to combine the video and audio. If you don't have ffmpeg installed, an error will be generated.
