@@ -35,7 +35,7 @@ colorama.init()
 
 class Video:
     """Video class that contains midis and export."""
-    _piano_subdiv_res = 50
+    _subdiv_res = 50
 
     def __init__(self, resolution: Tuple[int, int], fps: int, offset: int) -> None:
         """
@@ -185,11 +185,11 @@ class Video:
                     color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
                     width = width_white if white else width_black
                     height = height_white if white else height_black
-                    height_inc = height / self._piano_subdiv_res
-                    height /= self._piano_subdiv_res
+                    height_inc = height / self._subdiv_res
+                    height /= self._subdiv_res
                     height += 1
-                    for i in range(self._piano_subdiv_res):
-                        curr_col = calc_color_mix(self._get_rainbow_color(index), color, i/self._piano_subdiv_res)
+                    for i in range(self._subdiv_res):
+                        curr_col = calc_color_mix(self._get_rainbow_color(index), color, i/self._subdiv_res)
                         pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
 
         pygame.draw.rect(surface, (0, 0, 0), (0, self._res[1]/4*3, self._res[0], self._res[1]/4))
@@ -235,6 +235,7 @@ class Video:
         for note in self._notes:
             if note[1] <= frame <= note[2]:
                 playing.append(note[0])
+        playing = list(set(playing))
 
         surface.blit(self._render_blocks(frame), (0, 0))
         surface.blit(self._render_piano(playing), (0, 0))
