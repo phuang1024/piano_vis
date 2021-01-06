@@ -258,7 +258,8 @@ class Video:
         :param path: Path to export, must be .mp4
         :param multicore: Uses multiple cores to export video. This may be faster, but takes more power and uses more disk space.
         """
-        def multicore_video(video, path, frames):
+        def multicore_video(path, frames):
+            video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
             process = PrintProcess()
             for i in range(frames):
                 msg = f"Encoding frame {i} of {frames}"
@@ -273,6 +274,9 @@ class Video:
 
                 video.write(cv2.imread(os.path.join(path, f"{i}.png")))
                 process.clear(final_msg)
+
+            process.finish(f"Finished encoding {frames} frames.")
+            video.release()
 
         def multicore_export(path, start, end):
             for frame in range(start, end+1):
@@ -301,11 +305,10 @@ class Video:
 
             tmp_imgs_path = os.path.join(parent, hash)
             tmp_vid_path = os.path.join(parent, hash+".mp4")
-            video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
             os.makedirs(tmp_imgs_path)
 
             try:
-                video_process = multiprocessing.Process(target=multicore_video, args=(video, tmp_imgs_path, frames))
+                video_process = multiprocessing.Process(target=multicore_video, args=(tmp_imgs_path, frames))
                 video_process.start()
                 processes.append(video_process)
 
@@ -322,7 +325,6 @@ class Video:
                     curr_start = curr_start + inc + 1
 
                 video_process.join()
-                video.release()
                 cv2.destroyAllWindows()
 
             except KeyboardInterrupt:
@@ -333,6 +335,8 @@ class Video:
                 print(Fore.RED + "Keyboard Interrupt.")
                 print(Fore.WHITE + "Removing temporary files.")
                 return
+
+            #shutil.rmtree(tmp_imgs_path)
 
         else:
             tmp_img_path = os.path.join(parent, hash+".png")
