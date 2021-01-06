@@ -405,13 +405,12 @@ class Video:
             os.remove(tmp_img_path)
 
         # Combine audio and video
+        shutil.copy(tmp_vid_path, "no_audio_"+path)
         if self._audio_path is not None:
             print(Fore.WHITE + "Combining with audio")
             command = "ffmpeg -y -i {} -r {} -i {} -filter:a aresample=async=1 -c:a aac -c:v copy {}"
             command = command.format(self._audio_path, self._fps, tmp_vid_path, path)
             os.system(command)
-        else:
-            shutil.copy(tmp_vid_path, path)
         os.remove(tmp_vid_path)
 
         print(Fore.WHITE + "-" * 50)
