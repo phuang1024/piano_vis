@@ -19,6 +19,7 @@ import sys
 import os
 import shutil
 import time
+import multiprocessing
 import pygame
 import cv2
 import mido
@@ -251,11 +252,11 @@ class Video:
 
         return surface
 
-    def export(self, path: str) -> None:
+    def export(self, path: str, multicore: bool = False) -> None:
         """
         Exports video to path.
         :param path: Path to export, must be .mp4
-        :param frames: Fixed amount of frames to export (set to None to auto detect)
+        :param multicore: Uses multiple cores to export video. This may be faster, but takes more power and uses more disk space.
         """
         if not path.endswith(".mp4"):
             raise ValueError("Path must end with .mp4")
@@ -268,57 +269,57 @@ class Video:
         parent = os.path.realpath(os.path.dirname(__file__))
 
         hash = get_hash()
-        while os.path.isfile(os.path.join(parent, hash+".png")) or os.path.isfile(os.path.join(parent, hash+".mp4")):
-            hash = get_hash()
-
         self._parse_midis()
         frames = self._calc_num_frames()
 
         # Export frames
-        tmp_img_path = os.path.join(parent, hash+".png")
-        tmp_vid_path = os.path.join(parent, hash+".mp4")
-        video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
-
-        try:
-            process = PrintProcess()
-            start = time.time()
-            for i in range(frames):
-                msg = f"Exporting frame {i} of {frames}"
-                elapse = time.time() - start
-                left = (frames-i-1) * elapse / (i+1)
-                percent = (i+1) / frames
-                progress = int(percent * 50)
-                progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
-                final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
-                process.write(final_msg)
-
-                surf = self._render(i)
-                pygame.image.save(surf, tmp_img_path)
-                video.write(cv2.imread(tmp_img_path))
-
-                process.clear(final_msg)
-
-            process.finish(f"Finished exporting {frames} frames.")
-
-            video.release()
-            cv2.destroyAllWindows()
-
-        except KeyboardInterrupt:
-            print(Fore.RED + "Keyboard interrupt")
-            os.remove(tmp_img_path)
-            os.remove(tmp_vid_path)
-            return
-
-        os.remove(tmp_img_path)
-
-        # Combine audio and video
-        if self._audio_path is not None:
-            print(Fore.WHITE + "Combining with audio")
-            command = "ffmpeg -y -i {} -r {} -i {} -filter:a aresample=async=1 -c:a aac -c:v copy {}"
-            command = command.format(self._audio_path, self._fps, tmp_vid_path, path)
-            os.system(command)
+        if multicore:
+            pass
         else:
-            shutil.copy(tmp_vid_path, path)
-        os.remove(tmp_vid_path)
+            tmp_img_path = os.path.join(parent, hash+".png")
+            tmp_vid_path = os.path.join(parent, hash+".mp4")
+            video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
 
-        print(Fore.WHITE + "-" * 50)
+            try:
+                process = PrintProcess()
+                start = time.time()
+                for i in range(frames):
+                    msg = f"Exporting frame {i} of {frames}"
+                    elapse = time.time() - start
+                    left = (frames-i-1) * elapse / (i+1)
+                    percent = (i+1) / frames
+                    progress = int(percent * 50)
+                    progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
+                    final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
+                    process.write(final_msg)
+
+                    surf = self._render(i)
+                    pygame.image.save(surf, tmp_img_path)
+                    video.write(cv2.imread(tmp_img_path))
+
+                    process.clear(final_msg)
+
+                process.finish(f"Finished exporting {frames} frames.")
+
+                video.release()
+                cv2.destroyAllWindows()
+
+            except KeyboardInterrupt:
+                print(Fore.RED + "Keyboard interrupt")
+                os.remove(tmp_img_path)
+                os.remove(tmp_vid_path)
+                return
+
+            os.remove(tmp_img_path)
+
+            # Combine audio and video
+            if self._audio_path is not None:
+                print(Fore.WHITE + "Combining with audio")
+                command = "ffmpeg -y -i {} -r {} -i {} -filter:a aresample=async=1 -c:a aac -c:v copy {}"
+                command = command.format(self._audio_path, self._fps, tmp_vid_path, path)
+                os.system(command)
+            else:
+                shutil.copy(tmp_vid_path, path)
+            os.remove(tmp_vid_path)
+
+            print(Fore.WHITE + "-" * 50)
