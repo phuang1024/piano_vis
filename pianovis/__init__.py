@@ -252,11 +252,12 @@ class Video:
 
         return surface
 
-    def export(self, path: str, multicore: bool = False) -> None:
+    def export(self, path: str, multicore: bool = False, notify: bool = False) -> None:
         """
         Exports video to path.
         :param path: Path to export, must be .mp4
         :param multicore: Uses multiple cores to export video. This may be faster, but takes more power and uses more disk space.
+        :param notify: Sends notification when done exporting (only works on linux).
         """
         def multicore_video(path, frames):
             video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
@@ -393,3 +394,6 @@ class Video:
         os.remove(tmp_vid_path)
 
         print(Fore.WHITE + "-" * 50)
+
+        if notify and sys.platform == "linux":
+            os.system("notify-send \"Piano Vis\" \"Finished exporting an animation!\"")
