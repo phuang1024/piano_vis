@@ -15,4 +15,19 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
-from .video import Video
+import sys
+import colorama
+from colorama import Fore
+colorama.init()
+
+
+class PrintProcess:
+    def write(self, msg):
+        sys.stdout.write(msg)
+        sys.stdout.flush()
+
+    def clear(self, msg):
+        sys.stdout.write("{0}{1}{0}".format("\b"*len(msg), " "*len(msg)))
+
+    def finish(self, msg):
+        print(Fore.GREEN + msg + Fore.WHITE)
