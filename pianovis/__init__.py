@@ -258,6 +258,28 @@ class Video:
         :param path: Path to export, must be .mp4
         :param multicore: Uses multiple cores to export video. This may be faster, but takes more power and uses more disk space.
         """
+        def multicore_video(video, path, frames):
+            process = PrintProcess()
+            for i in range(frames):
+                msg = f"Encoding frame {i} of {frames}"
+                percent = (i+1) / frames
+                progress = int(percent * 50)
+                progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
+                final_msg = "{}    {}".format(msg, progress_msg)
+                process.write(final_msg)
+
+                while not os.path.isfile(os.path.join(path, f"{i}.png")):
+                    time.sleep(0.01)
+
+                video.write(cv2.imread(os.path.join(path, f"{i}.png")))
+                process.clear(final_msg)
+
+        def multicore_export(path, start, end):
+            for frame in range(start, end+1):
+                surface = self._render(frame)
+                filepath = os.path.join(path, f"{frame}.png")
+                pygame.image.save(surface, filepath)
+
         if not path.endswith(".mp4"):
             raise ValueError("Path must end with .mp4")
 
@@ -283,7 +305,26 @@ class Video:
             os.makedirs(tmp_imgs_path)
 
             try:
-                pass
+                video_process = multiprocessing.Process(target=multicore_video, args=(video, tmp_imgs_path, frames))
+                video_process.start()
+                processes.append(video_process)
+
+                curr_start = 0
+                inc = frames / (num_cores-1)
+                for i in range(num_cores-1):
+                    start = int(curr_start)
+                    end = int(curr_start + inc)
+
+                    process = multiprocessing.Process(target=multicore_export, args=(tmp_imgs_path, start, end))
+                    process.start()
+                    processes.append(process)
+
+                    curr_start = curr_start + inc + 1
+
+                video_process.join()
+                video.release()
+                cv2.destroyAllWindows()
+
             except KeyboardInterrupt:
                 for p in processes:
                     p.terminate()
@@ -291,6 +332,7 @@ class Video:
                 os.remove(tmp_vid_path)
                 print(Fore.RED + "Keyboard Interrupt.")
                 print(Fore.WHITE + "Removing temporary files.")
+                return
 
         else:
             tmp_img_path = os.path.join(parent, hash+".png")
@@ -329,14 +371,14 @@ class Video:
 
             os.remove(tmp_img_path)
 
-            # Combine audio and video
-            if self._audio_path is not None:
-                print(Fore.WHITE + "Combining with audio")
-                command = "ffmpeg -y -i {} -r {} -i {} -filter:a aresample=async=1 -c:a aac -c:v copy {}"
-                command = command.format(self._audio_path, self._fps, tmp_vid_path, path)
-                os.system(command)
-            else:
-                shutil.copy(tmp_vid_path, path)
-            os.remove(tmp_vid_path)
+        # Combine audio and video
+        if self._audio_path is not None:
+            print(Fore.WHITE + "Combining with audio")
+            command = "ffmpeg -y -i {} -r {} -i {} -filter:a aresample=async=1 -c:a aac -c:v copy {}"
+            command = command.format(self._audio_path, self._fps, tmp_vid_path, path)
+            os.system(command)
+        else:
+            shutil.copy(tmp_vid_path, path)
+        os.remove(tmp_vid_path)
 
-            print(Fore.WHITE + "-" * 50)
+        print(Fore.WHITE + "-" * 50)
