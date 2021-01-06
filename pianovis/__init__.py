@@ -77,7 +77,7 @@ class Video:
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
-            "blocks.speed": 170,
+            "blocks.speed": 180,
             "blocks.color_type": "SOLID",
             "blocks.color": (255, 255, 255),
             "blocks.rounding": 5,
@@ -328,7 +328,7 @@ class Video:
                 start = time.time()
                 while True:
                     num_frames = len(os.listdir(tmp_imgs_path))
-                    msg = f"Rendering frames, {num_frames} finished."
+                    msg = f"Rendering frames, {num_frames}/{total_frames} finished."
                     elapse = time.time() - start
                     left = (total_frames-num_frames-1) * elapse / (num_frames+1)
                     percent = (num_frames+1) / total_frames
