@@ -251,7 +251,7 @@ class Video:
 
         return surface
 
-    def export(self, path: str, frames: int = None) -> None:
+    def export(self, path: str) -> None:
         """
         Exports video to path.
         :param path: Path to export, must be .mp4
@@ -272,8 +272,7 @@ class Video:
             hash = get_hash()
 
         self._parse_midis()
-        if frames is None:
-            frames = self._calc_num_frames()
+        frames = self._calc_num_frames()
 
         # Export frames
         tmp_img_path = os.path.join(parent, hash+".png")
