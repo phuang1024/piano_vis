@@ -22,7 +22,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="piano-vis",
-    version="0.0.9",
+    version="0.1.0",
     author="Patrick Huang",
     author_email="huangpatrick16777216@gmail.com",
     description="Visualize piano midi files..",
