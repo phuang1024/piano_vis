@@ -274,7 +274,24 @@ class Video:
 
         # Export frames
         if multicore:
-            pass
+            num_cores = multiprocessing.cpu_count()
+            processes = []
+
+            tmp_imgs_path = os.path.join(parent, hash)
+            tmp_vid_path = os.path.join(parent, hash+".mp4")
+            video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
+            os.makedirs(tmp_imgs_path)
+
+            try:
+                pass
+            except KeyboardInterrupt:
+                for p in processes:
+                    p.terminate()
+                shutil.rmtree(tmp_imgs_path)
+                os.remove(tmp_vid_path)
+                print(Fore.RED + "Keyboard Interrupt.")
+                print(Fore.WHITE + "Removing temporary files.")
+
         else:
             tmp_img_path = os.path.join(parent, hash+".png")
             tmp_vid_path = os.path.join(parent, hash+".mp4")
