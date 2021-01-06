@@ -311,22 +311,41 @@ class Video:
 
             try:
                 curr_start = 0
-                inc = frames / (num_cores)
+                inc = frames / num_cores
+                total_frames = 0
                 for i in range(num_cores):
                     start = int(curr_start)
                     end = int(curr_start + inc)
+                    total_frames += end - start + 1
 
                     process = multiprocessing.Process(target=multicore_export, args=(tmp_imgs_path, start, end))
                     process.start()
                     processes.append(process)
 
-                    curr_start = curr_start + inc + 1
+                    curr_start += inc + 1
 
                 print_process = PrintProcess()
-                print_process.write("Rendering frames...")
+                start = time.time()
+                while True:
+                    num_frames = len(os.listdir(tmp_imgs_path))
+                    msg = f"Rendering frames, {num_frames} finished."
+                    elapse = time.time() - start
+                    left = (total_frames-num_frames-1) * elapse / (num_frames+1)
+                    percent = (num_frames+1) / total_frames
+                    progress = int(percent * 50)
+                    progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
+                    final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
+                    print_process.write(final_msg)
+
+                    if num_frames >= total_frames:
+                        print_process.clear(final_msg)
+                        break
+
+                    time.sleep(0.01)
+                    print_process.clear(final_msg)
+
                 for p in processes:
                     p.join()
-                print_process.clear("Rendering frames...")
                 print_process.finish("Finished rendering frames.")
 
                 video_process = multiprocessing.Process(target=multicore_video, args=(tmp_imgs_path, frames))
