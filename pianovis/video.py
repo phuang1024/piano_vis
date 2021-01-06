@@ -28,7 +28,7 @@ import colorama
 from colorama import Fore
 from typing import Dict, List, Tuple
 from hashlib import sha256
-from .utils import PrintProcess
+from .utils import PreciseClock, PrintProcess
 pygame.init()
 colorama.init()
 
@@ -236,6 +236,36 @@ class Video:
         surface.blit(self._render_piano(playing), (0, 0))
 
         return surface
+
+    def preview(self, resolution: Tuple[int, int] = (1600, 900)):
+        """
+        Previews the video with a Pygame window (no audio).
+        :param resolution: Resolution of window.
+        """
+        pygame.display.set_caption("PianoVis - Preview")
+        window = pygame.display.set_mode(resolution)
+
+        self._parse_midis()
+        total_frames = self._calc_num_frames()
+
+        clock = PreciseClock(self._fps)
+        frame = 0
+        while True:
+            clock.tick()
+            pygame.display.update()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+
+            window.fill((0, 0, 0))
+            surface = self._render(frame)
+            surface = pygame.transform.scale(surface, resolution)
+            window.blit(surface, (0, 0))
+
+            frame += 1
+            if frame >= total_frames:
+                return
 
     def export(self, path: str, multicore: bool = False, notify: bool = False) -> None:
         """
