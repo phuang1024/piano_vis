@@ -261,18 +261,22 @@ class Video:
         def multicore_video(path, frames):
             video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
             process = PrintProcess()
+            start = time.time()
             for i in range(frames):
                 msg = f"Encoding frame {i} of {frames}"
+                elapse = time.time() - start
+                left = (frames-i-1) * elapse / (i+1)
                 percent = (i+1) / frames
                 progress = int(percent * 50)
                 progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
-                final_msg = "{}    {}".format(msg, progress_msg)
+                final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
                 process.write(final_msg)
 
-                while not os.path.isfile(os.path.join(path, f"{i}.png")):
+                curr_img_path = os.path.join(path, f"{i}.png")
+                while not os.path.isfile(curr_img_path):
                     time.sleep(0.01)
 
-                video.write(cv2.imread(os.path.join(path, f"{i}.png")))
+                video.write(cv2.imread(curr_img_path))
                 process.clear(final_msg)
 
             process.finish(f"Finished encoding {frames} frames.")
@@ -308,10 +312,6 @@ class Video:
             os.makedirs(tmp_imgs_path)
 
             try:
-                video_process = multiprocessing.Process(target=multicore_video, args=(tmp_imgs_path, frames))
-                video_process.start()
-                processes.append(video_process)
-
                 curr_start = 0
                 inc = frames / (num_cores-1)
                 for i in range(num_cores-1):
@@ -324,6 +324,15 @@ class Video:
 
                     curr_start = curr_start + inc + 1
 
+                print(Fore.WHITE + "Rendering frames...")
+                for p in processes:
+                    p.join()
+                print(Fore.GREEN + "Finished rendering frames.")
+
+                video_process = multiprocessing.Process(target=multicore_video, args=(tmp_imgs_path, frames))
+                video_process.start()
+                processes.append(video_process)
+
                 video_process.join()
                 cv2.destroyAllWindows()
 
@@ -331,7 +340,8 @@ class Video:
                 for p in processes:
                     p.terminate()
                 shutil.rmtree(tmp_imgs_path)
-                os.remove(tmp_vid_path)
+                if os.path.isfile(tmp_vid_path):
+                    os.remove(tmp_vid_path)
                 print(Fore.RED + "Keyboard Interrupt.")
                 print(Fore.WHITE + "Removing temporary files.")
                 return
