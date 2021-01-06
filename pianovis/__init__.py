@@ -272,11 +272,8 @@ class Video:
                 final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
                 process.write(final_msg)
 
-                curr_img_path = os.path.join(path, f"{i}.png")
-                while not os.path.isfile(curr_img_path):
-                    time.sleep(0.01)
-
-                video.write(cv2.imread(curr_img_path))
+                if os.path.isfile(curr_img_path := os.path.join(path, f"{i}.png")):
+                    video.write(cv2.imread(curr_img_path))
                 process.clear(final_msg)
 
             process.finish(f"Finished encoding {frames} frames.")
@@ -313,8 +310,8 @@ class Video:
 
             try:
                 curr_start = 0
-                inc = frames / (num_cores-1)
-                for i in range(num_cores-1):
+                inc = frames / (num_cores)
+                for i in range(num_cores):
                     start = int(curr_start)
                     end = int(curr_start + inc)
 
