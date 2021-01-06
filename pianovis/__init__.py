@@ -324,7 +324,7 @@ class Video:
                 print(Fore.WHITE + "Rendering frames...")
                 for p in processes:
                     p.join()
-                print(Fore.GREEN + "Finished rendering frames.")
+                print(Fore.GREEN + "Finished rendering frames." + Fore.WHITE)
 
                 video_process = multiprocessing.Process(target=multicore_video, args=(tmp_imgs_path, frames))
                 video_process.start()
