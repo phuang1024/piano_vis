@@ -67,8 +67,8 @@ class Video:
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
             "blocks.speed": 180,
-            "blocks.color_type": "SOLID",
-            "blocks.color": (255, 255, 255),
+            "blocks.color1": (0, 230, 240),
+            "blocks.color2": (255, 230, 240),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
         }
@@ -113,10 +113,18 @@ class Video:
         """Sets audio file."""
         self._audio_path = path
 
-    def _get_rainbow_color(self, key):
-        hue = key / 88
-        color = colorsys.hsv_to_rgb(hue, 0.8, 1)
-        color = [255 * x for x in color]
+    def _get_color(self, key):
+        col1 = self._options["blocks.color1"]
+        col2 = self._options["blocks.color2"]
+
+        fac = key / 88
+        diffs = [fac * (col2[i] - col1[i]) for i in range(3)]
+        color = [col1[i] + diffs[i] for i in range(3)]
+
+        color = [i/255 for i in color]
+        color = colorsys.hsv_to_rgb(*color)
+        color = [i*255 for i in color]
+
         return color
 
     def _parse_midis(self):
@@ -167,30 +175,23 @@ class Video:
         for index, white, x_loc in self._key_locs:
             playing = index in keys
 
-            if not playing:
+            if playing:
+                color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
+                width = width_white if white else width_black
+                height = height_white if white else height_black
+                height_inc = height / self._subdiv_res
+                height /= self._subdiv_res
+                height += 1
+                for i in range(self._subdiv_res):
+                    curr_col = calc_color_mix(self._get_color(index), color, i/self._subdiv_res)
+                    pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
+
+            else:
                 color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
                 if white:
                     pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
                 else:
                     pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
-
-            else:
-                if self._options["blocks.color_type"] == "SOLID":
-                    color = self._options["keys.white.color_playing"] if white else self._options["keys.black.color_playing"]
-                    if white:
-                        pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_white, height_white))
-                    else:
-                        pygame.draw.rect(surface, color, (x_loc, self._key_y_loc, width_black, height_black))
-                elif self._options["blocks.color_type"] == "RAINBOW":
-                    color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
-                    width = width_white if white else width_black
-                    height = height_white if white else height_black
-                    height_inc = height / self._subdiv_res
-                    height /= self._subdiv_res
-                    height += 1
-                    for i in range(self._subdiv_res):
-                        curr_col = calc_color_mix(self._get_rainbow_color(index), color, i/self._subdiv_res)
-                        pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
 
         pygame.draw.rect(surface, (0, 0, 0), (0, self._res[1]/4*3, self._res[0], self._res[1]/4))
         return surface
@@ -211,13 +212,7 @@ class Video:
                 x_loc = self._find_x_loc(key)
                 width = white_width if self._is_white(key) else black_width
                 height = bottom_y - top_y
-
-                if self._options["blocks.color_type"] == "SOLID":
-                    color = self._options["blocks.color"]
-                elif self._options["blocks.color_type"] == "RAINBOW":
-                    color = self._get_rainbow_color(key)
-                else:
-                    color = (255, 255, 255)
+                color = self._get_color(key)
 
                 radius = self._options["blocks.rounding"]
                 if self._options["blocks.motion_blur"]:
