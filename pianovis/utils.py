@@ -16,6 +16,7 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import sys
+import time
 import colorama
 from colorama import Fore
 colorama.init()
@@ -31,3 +32,14 @@ class PrintProcess:
 
     def finish(self, msg):
         print(Fore.GREEN + msg + Fore.WHITE)
+
+
+class PreciseClock:
+    def __init__(self, fps):
+        self.pause_time = 1 / fps
+        self.next_tick = time.time() + self.pause_time
+
+    def tick(self):
+        while time.time() < self.next_tick:
+            time.sleep(0.001)
+        self.next_tick += self.pause_time
