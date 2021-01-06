@@ -57,7 +57,7 @@ class Video:
         """
         self._res = resolution
         self._fps = fps
-        self._offset = offset - 2
+        self._offset = offset
         self._midi_paths = []
         self._audio_path = None
         self._gen_info()
@@ -343,7 +343,7 @@ class Video:
                 print(Fore.WHITE + "Removing temporary files.")
                 return
 
-            #shutil.rmtree(tmp_imgs_path)
+            shutil.rmtree(tmp_imgs_path)
 
         else:
             tmp_img_path = os.path.join(parent, hash+".png")
