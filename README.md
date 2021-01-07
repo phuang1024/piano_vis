@@ -4,6 +4,12 @@
 
 A Python piano video exporter.
 
+[Papillon (Grieg)](https://www.youtube.com/watch?v=mUAQ6-2oa2w)
+
+[Impromptu Rosamunde (Schubert)](https://www.youtube.com/watch?v=y0lmpqP2AGY)
+
+[Sonatina (Clementi)](https://www.youtube.com/watch?v=kfebLsnU1qE)
+
 <br>
 
 ## Quick Start
