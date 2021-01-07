@@ -41,16 +41,18 @@ class Video:
     _key_subdivs = 50
     _block_subdivs = 20
 
-    def __init__(self, resolution: Tuple[int, int], fps: int, offset: int) -> None:
+    def __init__(self, resolution: Tuple[int, int], fps: int, offset: int, decor_surf: pygame.Surface = None) -> None:
         """
         Initializes video.
         :param resolution: Resolution (x, y) of video.
         :param fps: Frames per second of video.
         :param offset: Offset (frames) in start time of playing.
+        :param decor_surf: Decoration surface, blitted under the piano.
         """
         self._res = resolution
         self._fps = fps
         self._offset = offset
+        self._decor_surf = decor_surf
         self._midi_paths = []
         self._audio_path = None
         self._gen_info()
