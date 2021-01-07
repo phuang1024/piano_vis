@@ -33,4 +33,14 @@ RED2 = (1, 1, 1)
 
 
 # Block presets
-BLOCK_PRESET_RAINBOW = ((0, RED1), (1, RED2))
+BLOCK_PRESET_RAINBOW = (
+    (0, RED1),
+    (1, RED2)
+)
+BLOCK_PRESET_CHRISTMAS = (
+    (0, RED1), (0.199, RED1),
+    (0.2, GREEN), (0.399, GREEN),
+    (0.4, WHITE), (0.599, WHITE),
+    (0.6, RED1), (0.799, RED1),
+    (0.8, GREEN), (1, GREEN)
+)
