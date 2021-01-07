@@ -46,10 +46,22 @@ BLOCK_PRESET_RAINBOW = (
     (0, RED_1),
     (1, RED_2)
 )
-BLOCK_PRESET_CHRISTMAS = (
+BLOCK_PRESET_CHRISTMAS_1 = (
     (0, RED_1), (0.199, RED_1),
     (0.2, GREEN), (0.399, GREEN),
     (0.4, WHITE), (0.599, WHITE),
     (0.6, RED_1), (0.799, RED_1),
     (0.8, GREEN), (1, GREEN)
+)
+BLOCK_PRESET_CHRISTMAS_2 = (
+    (0, GREEN), (0.099, GREEN),
+    (0.1, RED_1), (0.199, RED_1),
+    (0.2, WHITE), (0.299, WHITE),
+    (0.3, GREEN), (0.399, GREEN),
+    (0.4, RED_1), (0.499, RED_1),
+    (0.5, WHITE), (0.599, WHITE),
+    (0.6, GREEN), (0.699, GREEN),
+    (0.7, RED_1), (0.799, RED_1),
+    (0.8, WHITE), (0.899, WHITE),
+    (0.9, GREEN), (1, GREEN)
 )
