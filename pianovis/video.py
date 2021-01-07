@@ -26,8 +26,9 @@ import mido
 import colorsys
 import colorama
 from colorama import Fore
-from typing import Dict, List, Tuple
+from typing import Tuple
 from hashlib import sha256
+from .constants import *
 from .utils import PreciseClock, PrintProcess
 pygame.init()
 colorama.init()
@@ -68,8 +69,7 @@ class Video:
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
             "blocks.speed": 180,
-            "blocks.color1": (0, 230, 240),
-            "blocks.color2": (255, 230, 240),
+            "blocks.color_grad": ((0, RED), (0, (1, 1, 1))),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
         }
@@ -115,18 +115,21 @@ class Video:
         self._audio_path = path
 
     def _get_color(self, key):
-        col1 = self._options["blocks.color1"]
-        col2 = self._options["blocks.color2"]
+        def convert(color):
+            return [255*x for x in colorsys.hsv_to_rgb(color)]
+
+        grad = self._options["blocks.color_grad"]
+
+        if len(grad) == 0:
+            return convert(WHITE)
+        elif len(grad) == 1:
+            return convert(grad[0][1])
 
         fac = key / 88
-        diffs = [fac * (col2[i] - col1[i]) for i in range(3)]
-        color = [col1[i] + diffs[i] for i in range(3)]
-
-        color = [i/255 for i in color]
-        color = colorsys.hsv_to_rgb(*color)
-        color = [i*255 for i in color]
-
-        return color
+        if fac <= grad[0][0]:
+            return convert(grad[0][1])
+        elif fac >= grad[-1][0]:
+            return convert(grad[-1][1])
 
     def _parse_midis(self):
         self._notes = []
