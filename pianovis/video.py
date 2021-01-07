@@ -243,8 +243,9 @@ class Video:
                     mb_dist = self._options["blocks.speed"] / self._fps / 3
                     pygame.draw.rect(surface, (*color, 92), (x_loc, top_y-mb_dist, width-1, height+mb_dist), border_radius=radius)
                 pygame.draw.rect(surface, color, (x_loc, top_y, width-1, height), border_radius=radius)
-                pygame.draw.rect(surface, self._options["blocks.color_border"], (x_loc, top_y, width-1, height),
-                    self._options["blocks.border"], border_radius=radius)
+                if (border := self._options["blocks.border"]) > 0:
+                    pygame.draw.rect(surface, self._options["blocks.color_border"], (x_loc, top_y, width-1, height),
+                        border, border_radius=radius)
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
