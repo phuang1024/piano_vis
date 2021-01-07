@@ -15,6 +15,15 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import os
+import pygame
+pygame.init()
+
+
+# General
+PARENT = os.path.realpath(os.path.dirname(__file__))
+LOGO = pygame.image.load(os.path.join(PARENT, "images", "logo.png"))
+
 
 # Colors
 BLACK = (0, 0, 0)
