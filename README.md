@@ -35,6 +35,21 @@ vid.export("video.mp4")
     * path: Option path.
     * value: Value to set path to.
     * return: None
+* `Video.add_midi(path: str) -> None`
+    * Appends path to midi list.
+    * path: Midi file path.
+* `Video.set_audio(path: str) -> None`
+    * Sets audio file to path.
+    * path: Audio file path.
+* `Video.preview(resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True) -> None:`
+    * Opens a pygame window to preview the animation.
+    * resolution=(1600, 900): Resolution of pygame window.
+    * show_meta=True: Show metadata in the corner of window.
+* `Video.export(self, path: str, multicore: bool = False, max_cores: int = multiprocessing.cpu_count(), notify: bool = False) -> None:`
+    * path: Path to export (mp4)
+    * multicore=False: Use multiple cores to export. Can be faster, but will take more power.
+    * max_cores=multiprocessing.cpu_count(): Maximum cores to use. Only relevant if using multicore.
+    * notify=False: Sends notification when done exporting. Only works on linux.
 
 <br>
 
