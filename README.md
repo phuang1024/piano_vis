@@ -34,12 +34,11 @@ vid.export("video.mp4")
     * `resolution`: (x, y) pixel resolution of video.
     * `fps`: FPS (frames per second) of video.
     * `offset`: Offset (frames) of video from audio. Usually, a value of 1 makes the video look lined up with the audio.
-    * `return`: None
+    * `decor_surf`=None Decoration surface, blitted under the piano.
 * `Video.configure(path: str, value: Any) -> None`
     * Sets an option for the video (read more in the Customization section).
     * `path`: Option path.
     * `value`: Value to set path to.
-    * `return`: None
 * `Video.add_midi(path: str) -> None`
     * Appends path to midi list.
     * `path`: Midi file path.
