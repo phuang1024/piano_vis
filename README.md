@@ -46,6 +46,7 @@ vid.export("video.mp4")
     * resolution=(1600, 900): Resolution of pygame window.
     * show_meta=True: Show metadata in the corner of window.
 * `Video.export(self, path: str, multicore: bool = False, max_cores: int = multiprocessing.cpu_count(), notify: bool = False) -> None:`
+    * Exports video to path.
     * path: Path to export (mp4)
     * multicore=False: Use multiple cores to export. Can be faster, but will take more power.
     * max_cores=multiprocessing.cpu_count(): Maximum cores to use. Only relevant if using multicore.
@@ -54,3 +55,12 @@ vid.export("video.mp4")
 <br>
 
 ## Customization
+* `keys.white.gap`: Gap (pixels) between white keys.
+* `keys.white.color`: Color (RGB) of white keys.
+* `keys.black.width_fac`: Factor of white key width.
+* `keys.black.height_fac`: Factor of white key height.
+* `keys.black.color`: Color (RGB) of black keys.
+* `blocks.speed`: Speed (pixels per second) of blocks.
+* `blocks.color_grad`: Color gradient of blocks: ((fac1, hsv1), (fac2, hsv2)...)
+* `blocks.rounding`: Rounding radius of blocks.
+* `blocks.motion_blur`: Use motion blur in blocks.
