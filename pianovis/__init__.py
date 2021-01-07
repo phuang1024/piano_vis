@@ -15,4 +15,5 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+from .constants import *
 from .video import Video
