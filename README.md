@@ -65,3 +65,18 @@ Run `Video.configure` to change options.
 * `blocks.color_grad`: Color gradient of blocks: ((fac1, hsv1), (fac2, hsv2)...)
 * `blocks.rounding`: Rounding radius of blocks.
 * `blocks.motion_blur`: Use motion blur in blocks.
+
+<br>
+
+## How It Works
+* The user adds midis and sets an audio.
+* When the user calls `Video.export`, a few things happen:
+    * All midis are parsed.
+    * Single core:
+        * Each frame is rendered with pygame, saved, and encoded with opencv.
+        * All temporary files are deleted.
+    * Multi core:
+        * Each core is assigned a chunk of frames and renders and saves them.
+        * Each frame is encoded with opencv.
+        * All temporary files are deleted.
+    * The audio is combined with video with ffmpeg.
