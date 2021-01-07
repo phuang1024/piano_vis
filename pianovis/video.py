@@ -35,7 +35,8 @@ colorama.init()
 
 class Video:
     """Video class that contains midis and export."""
-    _subdiv_res = 50
+    _key_subdivs = 50
+    _block_subdivs = 20
 
     def __init__(self, resolution: Tuple[int, int], fps: int, offset: int) -> None:
         """
@@ -179,11 +180,11 @@ class Video:
                 color = self._options["keys.white.color"] if white else self._options["keys.black.color"]
                 width = width_white if white else width_black
                 height = height_white if white else height_black
-                height_inc = height / self._subdiv_res
-                height /= self._subdiv_res
+                height_inc = height / self._key_subdivs
+                height /= self._key_subdivs
                 height += 1
-                for i in range(self._subdiv_res):
-                    curr_col = calc_color_mix(self._get_color(index), color, i/self._subdiv_res)
+                for i in range(self._key_subdivs):
+                    curr_col = calc_color_mix(self._get_color(index), color, i/self._key_subdivs)
                     pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
 
             else:
@@ -196,13 +197,19 @@ class Video:
         pygame.draw.rect(surface, (0, 0, 0), (0, self._res[1]/4*3, self._res[0], self._res[1]/4))
         return surface
 
-    def _render_blocks(self, frame):
+    def _render_blocks(self, frame, playing):
+        def calc_color_mix(col1, col2, fac):
+            diff = [col2[i]-col1[i] for i in range(3)]
+            color = [col1[i]+diff[i]*fac for i in range(3)]
+            return color
+
         surface = pygame.Surface(self._res, pygame.SRCALPHA)
         width, height = self._res
         y_offset = height / 2
         white_width = width * 0.95 / 52
         black_width = white_width * self._options["keys.black.width_fac"]
 
+        # Base blocks
         for key, start, end in self._notes:
             bottom_y = (frame-start)/self._fps*self._options["blocks.speed"] + y_offset
             top_y = bottom_y - (end-start)/self._fps*self._options["blocks.speed"]
@@ -219,6 +226,18 @@ class Video:
                     mb_dist = self._options["blocks.speed"] / self._fps / 3
                     pygame.draw.rect(surface, (*color, 92), (x_loc, top_y-mb_dist, width-1, height+mb_dist), border_radius=radius)
                 pygame.draw.rect(surface, color, (x_loc, top_y, width-1, height), border_radius=radius)
+
+        # Glowing
+        for key in playing:
+            x_loc = self._find_x_loc(key)
+            white = self._is_white(key)
+
+            width = white_width if white else black_width
+            height_inc = 25 / self._block_subdivs
+            for step in range(self._block_subdivs):
+                y_loc = (self._res[1]/2) - height_inc*(step+1)
+                color = calc_color_mix((255, 255, 255), self._get_color(key), step/self._block_subdivs)
+                pygame.draw.rect(surface, color, (x_loc, y_loc, width, height_inc+1))
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
