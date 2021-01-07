@@ -21,26 +21,35 @@ BLACK = (0, 0, 0)
 GRAY = (0, 0, 0.5)
 WHITE = (0, 0, 1)
 
-RED1 = (0, 1, 1)
+DARK_RED_1 = (0, 0, 0.5)
+RED_1 = (0, 1, 1)
+DARK_ORANGE = (0.083, 1, 1)
 ORANGE = (0.083, 1, 1)
+DARK_YELLOW = (0.166, 1, 0.5)
 YELLOW = (0.166, 1, 1)
+DARK_GREEN = (0.333, 1, 0.5)
 GREEN = (0.333, 1, 1)
+DARK_CYAN = (0.5, 1, 0.5)
 CYAN = (0.5, 1, 1)
+DARK_BLUE = (0.6, 1, 0.5)
 BLUE = (0.6, 1, 1)
+DARK_MAGENTA = (0.8, 1, 0.5)
 MAGENTA = (0.8, 1, 1)
+DARK_PINK = (0.9, 1, 0.5)
 PINK = (0.9, 1, 1)
-RED2 = (1, 1, 1)
+DARK_RED_2 = (1, 1, 0.5)
+RED_2 = (1, 1, 1)
 
 
 # Block presets
 BLOCK_PRESET_RAINBOW = (
-    (0, RED1),
-    (1, RED2)
+    (0, RED_1),
+    (1, RED_2)
 )
 BLOCK_PRESET_CHRISTMAS = (
-    (0, RED1), (0.199, RED1),
+    (0, RED_1), (0.199, RED_1),
     (0.2, GREEN), (0.399, GREEN),
     (0.4, WHITE), (0.599, WHITE),
-    (0.6, RED1), (0.799, RED1),
+    (0.6, RED_1), (0.799, RED_1),
     (0.8, GREEN), (1, GREEN)
 )
