@@ -45,6 +45,7 @@ vid.export("video.mp4")
     * Opens a pygame window to preview the animation.
     * `resolution`=(1600, 900): Resolution of pygame window.
     * `show_meta`=True: Show metadata in the corner of window.
+    * `audio`=True: Play audio along preview.
 * `Video.export(self, path: str, multicore: bool = False, max_cores: int = multiprocessing.cpu_count(), notify: bool = False) -> None:`
     * Exports video to path.
     * `path`: Path to export (mp4)
