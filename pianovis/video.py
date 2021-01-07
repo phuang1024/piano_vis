@@ -19,15 +19,17 @@ import sys
 import os
 import shutil
 import time
+import threading
 import multiprocessing
 import pygame
 import cv2
 import mido
 import colorsys
 import colorama
-from colorama import Fore
 from typing import Any, Tuple
 from hashlib import sha256
+from colorama import Fore
+from playsound import playsound
 from .constants import *
 from .utils import PreciseClock, PrintProcess
 pygame.init()
@@ -264,10 +266,11 @@ class Video:
 
         return surface
 
-    def preview(self, resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True) -> None:
+    def preview(self, resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True, audio: bool = True) -> None:
         """
-        Previews the video with a Pygame window (no audio).
+        Previews the video with a Pygame window.
         :param resolution: Resolution of window.
+        :param audio: Play with audio but no jumping forward or backward.
         """
         self._parse_midis()
         total_frames = self._calc_num_frames()
@@ -281,6 +284,9 @@ class Video:
         frame = 0
         fps = self._fps
         playing = True
+        if audio and self._audio_path is not None:
+            threading.Thread(target=playsound, args=(self._audio_path,)).start()
+
         while True:
             start = time.time()
             clock.tick()
@@ -290,7 +296,7 @@ class Video:
                     pygame.quit()
                     return
 
-                elif event.type == pygame.KEYDOWN:
+                elif event.type == pygame.KEYDOWN and not audio:
                     if event.key == pygame.K_LEFT:
                         frame -= 100
                     elif event.key == pygame.K_RIGHT:
