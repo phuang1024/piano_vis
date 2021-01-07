@@ -67,7 +67,7 @@ class Video:
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
             "blocks.speed": 180,
-            "blocks.color_grad": ((0, RED_1), (1, RED_2)),
+            "blocks.color_grad": BLOCK_PRESET_RAINBOW,
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
         }
