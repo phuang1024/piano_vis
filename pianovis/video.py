@@ -252,6 +252,7 @@ class Video:
         clock = PreciseClock(self._fps)
         frame = 0
         fps = self._fps
+        playing = True
         while True:
             start = time.time()
             clock.tick()
@@ -260,6 +261,21 @@ class Video:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
+
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        frame -= 100
+                    elif event.key == pygame.K_RIGHT:
+                        frame += 100
+                    elif event.key == pygame.K_DOWN:
+                        frame -= 1000
+                    elif event.key == pygame.K_UP:
+                        frame += 1000
+                    elif event.key == pygame.K_SPACE:
+                        playing = not playing
+
+                    frame = min(frame, total_frames-1)
+                    frame = max(frame, 0)
 
             window.fill((0, 0, 0))
             rend_start = time.time()
@@ -276,11 +292,9 @@ class Video:
                 window.blit(font.render(f"Idle time: {idle_time}", 1, (255, 255, 255)), (20, 60))
                 window.blit(font.render(f"FPS: {fps}", 1, (255, 255, 255)), (20, 80))
 
-            frame += 1
-            if frame >= total_frames:
-                return
-
             fps = str(1 / (time.time() - start))[:6]
+            if playing and frame < total_frames:
+                frame += 1
 
     def export(self, path: str, multicore: bool = False, notify: bool = False) -> None:
         """
