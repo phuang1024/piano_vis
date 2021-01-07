@@ -93,5 +93,5 @@ Run `Video.configure` to change options.
 
 #### Constants (`pianovis.constants`)
 _Note: pianovis.BLACK == pianovis.constants.BLACK_
-* Colors
+* Colors (Normalized HSV)
 * Block color gradient presets.
