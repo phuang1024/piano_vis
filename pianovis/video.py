@@ -197,12 +197,7 @@ class Video:
         pygame.draw.rect(surface, (0, 0, 0), (0, self._res[1]/4*3, self._res[0], self._res[1]/4))
         return surface
 
-    def _render_blocks(self, frame, playing):
-        def calc_color_mix(col1, col2, fac):
-            diff = [col2[i]-col1[i] for i in range(3)]
-            color = [col1[i]+diff[i]*fac for i in range(3)]
-            return color
-
+    def _render_blocks(self, frame):
         surface = pygame.Surface(self._res, pygame.SRCALPHA)
         width, height = self._res
         y_offset = height / 2
@@ -226,18 +221,6 @@ class Video:
                     mb_dist = self._options["blocks.speed"] / self._fps / 3
                     pygame.draw.rect(surface, (*color, 92), (x_loc, top_y-mb_dist, width-1, height+mb_dist), border_radius=radius)
                 pygame.draw.rect(surface, color, (x_loc, top_y, width-1, height), border_radius=radius)
-
-        # Glowing
-        for key in playing:
-            x_loc = self._find_x_loc(key)
-            white = self._is_white(key)
-
-            width = white_width if white else black_width
-            height_inc = 25 / self._block_subdivs
-            for step in range(self._block_subdivs):
-                y_loc = (self._res[1]/2) - height_inc*(step+1)
-                color = calc_color_mix((255, 255, 255), self._get_color(key), step/self._block_subdivs)
-                pygame.draw.rect(surface, color, (x_loc, y_loc, width, height_inc+1))
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
