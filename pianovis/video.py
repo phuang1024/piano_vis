@@ -26,7 +26,7 @@ import mido
 import colorsys
 import colorama
 from colorama import Fore
-from typing import Tuple
+from typing import Any, Tuple
 from hashlib import sha256
 from .constants import *
 from .utils import PreciseClock, PrintProcess
@@ -103,7 +103,7 @@ class Video:
             loc -= key_width * self._options["keys.black.width_fac"] / 2
         return loc
 
-    def configure(self, path, value):
+    def configure(self, path: str, value: Any) -> None:
         self._options[path] = value
 
     def add_midi(self, path: str) -> None:
