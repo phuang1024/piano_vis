@@ -266,6 +266,12 @@ class Video:
         surface.blit(self._render_blocks(frame), (0, 0))
         surface.blit(self._render_piano(playing), (0, 0))
 
+        if self._decor_surf is not None:
+            width, height = self._decor_surf.get_size()
+            x = (self._res[0]-width) // 2
+            y = (self._res[1]-height) // 2
+            surface.blit(self._decor_surf, (x, y))
+
         return surface
 
     def preview(self, resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True, audio: bool = True) -> None:
