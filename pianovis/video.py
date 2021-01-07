@@ -268,6 +268,7 @@ class Video:
         total_frames = self._calc_num_frames()
 
         pygame.display.set_caption("PianoVis - Preview")
+        pygame.display.set_icon(LOGO)
         window = pygame.display.set_mode(resolution)
         font = pygame.font.SysFont("ubuntu", 14)
 
