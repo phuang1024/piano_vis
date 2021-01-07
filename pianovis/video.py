@@ -69,7 +69,7 @@ class Video:
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
             "blocks.speed": 180,
-            "blocks.color_grad": ((0, RED), (1, (1, 1, 1))),
+            "blocks.color_grad": ((0, RED1), (1, RED2)),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
         }
