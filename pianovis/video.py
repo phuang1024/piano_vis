@@ -67,7 +67,9 @@ class Video:
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
             "blocks.speed": 180,
+            "blocks.border": 0,
             "blocks.color_grad": BLOCK_PRESET_RAINBOW,
+            "blocks.color_border": (255, 255, 255),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
         }
@@ -241,6 +243,8 @@ class Video:
                     mb_dist = self._options["blocks.speed"] / self._fps / 3
                     pygame.draw.rect(surface, (*color, 92), (x_loc, top_y-mb_dist, width-1, height+mb_dist), border_radius=radius)
                 pygame.draw.rect(surface, color, (x_loc, top_y, width-1, height), border_radius=radius)
+                pygame.draw.rect(surface, self._options["blocks.color_border"], (x_loc, top_y, width-1, height),
+                    self._options["blocks.border"], border_radius=radius)
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
