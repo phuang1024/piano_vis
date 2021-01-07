@@ -25,7 +25,7 @@ setuptools.setup(
     version="0.1.5",
     author="Patrick Huang",
     author_email="huangpatrick16777216@gmail.com",
-    description="Visualize piano midi files..",
+    description="A Python piano video exporter.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/HuangPatrick16777216/piano_vis",
