@@ -15,15 +15,22 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+
+# Colors
 BLACK = (0, 0, 0)
 GRAY = (0, 0, 0.5)
 WHITE = (0, 0, 1)
 
-RED = (0, 1, 1)
+RED1 = (0, 1, 1)
 ORANGE = (0.083, 1, 1)
 YELLOW = (0.166, 1, 1)
 GREEN = (0.333, 1, 1)
 CYAN = (0.5, 1, 1)
-BLUE = (0.666, 1, 1)
-MAGENTA = (0.833, 1, 1)
-PINK = (0.916, 1, 1)
+BLUE = (0.6, 1, 1)
+MAGENTA = (0.8, 1, 1)
+PINK = (0.9, 1, 1)
+RED2 = (1, 1, 1)
+
+
+# Block presets
+BLOCK_PRESET_RAINBOW = ((0, RED1), (0, RED2))
