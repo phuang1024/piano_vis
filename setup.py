@@ -36,6 +36,9 @@ setuptools.setup(
         "opencv-python",
         "mido",
         "colorama",
+        "vext",
+        "vext.gi",
+        "playsound",
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
