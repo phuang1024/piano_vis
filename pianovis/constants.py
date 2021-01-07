@@ -33,4 +33,4 @@ RED2 = (1, 1, 1)
 
 
 # Block presets
-BLOCK_PRESET_RAINBOW = ((0, RED1), (0, RED2))
+BLOCK_PRESET_RAINBOW = ((0, RED1), (1, RED2))
