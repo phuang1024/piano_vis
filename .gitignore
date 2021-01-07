@@ -2,3 +2,7 @@
 *.vscode
 
 tests/*
+a.py
+/*.mp3
+/*.wav
+/*.mid
