@@ -261,7 +261,7 @@ class Video:
 
         return surface
 
-    def preview(self, resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True):
+    def preview(self, resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True) -> None:
         """
         Previews the video with a Pygame window (no audio).
         :param resolution: Resolution of window.
