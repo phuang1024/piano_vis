@@ -55,6 +55,7 @@ vid.export("video.mp4")
 <br>
 
 ## Customization
+Run `Video.configure` to change options.
 * `keys.white.gap`: Gap (pixels) between white keys.
 * `keys.white.color`: Color (RGB) of white keys.
 * `keys.black.width_fac`: Factor of white key width.
