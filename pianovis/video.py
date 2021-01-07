@@ -69,7 +69,7 @@ class Video:
             "keys.black.color": (64, 64, 64),
             "keys.black.color_playing": (144, 144, 144),
             "blocks.speed": 180,
-            "blocks.color_grad": ((0, RED), (0, (1, 1, 1))),
+            "blocks.color_grad": ((0, RED), (1, (1, 1, 1))),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
         }
@@ -116,7 +116,7 @@ class Video:
 
     def _get_color(self, key):
         def convert(color):
-            return [255*x for x in colorsys.hsv_to_rgb(color)]
+            return [255*x for x in colorsys.hsv_to_rgb(*color)]
 
         def calc_color_mix(col1, col2, fac):
             diff = [col2[i]-col1[i] for i in range(3)]
@@ -139,7 +139,7 @@ class Video:
         below_ind = 0
         above_ind = 1
         for i, section in enumerate(grad):
-            if fac >= grad[0]:
+            if fac >= section[0]:
                 below_ind = i
                 above_ind = i + 1
                 break
