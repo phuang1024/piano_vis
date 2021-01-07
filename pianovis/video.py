@@ -63,11 +63,9 @@ class Video:
         self._options = {
             "keys.white.gap": 2,
             "keys.white.color": (215, 215, 210),
-            "keys.white.color_playing": (255, 255, 255),
             "keys.black.width_fac": 0.6,
             "keys.black.height_fac": 0.65,
             "keys.black.color": (64, 64, 64),
-            "keys.black.color_playing": (144, 144, 144),
             "blocks.speed": 180,
             "blocks.color_grad": ((0, RED_1), (1, RED_2)),
             "blocks.rounding": 5,
