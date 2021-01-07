@@ -1,4 +1,4 @@
-# PianoVis 0.1.5
+# PianoVis 0.1.6
 A Python piano video exporter.
 
 <br>
