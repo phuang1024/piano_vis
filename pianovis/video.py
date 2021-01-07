@@ -139,7 +139,7 @@ class Video:
         below_ind = 0
         above_ind = 1
         for i, section in enumerate(grad):
-            if fac >= section[0]:
+            if fac >= section[0] and fac <= grad[i+1][0]:
                 below_ind = i
                 above_ind = i + 1
                 break
