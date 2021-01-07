@@ -118,6 +118,11 @@ class Video:
         def convert(color):
             return [255*x for x in colorsys.hsv_to_rgb(color)]
 
+        def calc_color_mix(col1, col2, fac):
+            diff = [col2[i]-col1[i] for i in range(3)]
+            color = [col1[i]+diff[i]*fac for i in range(3)]
+            return color
+
         grad = self._options["blocks.color_grad"]
 
         if len(grad) == 0:
@@ -130,6 +135,20 @@ class Video:
             return convert(grad[0][1])
         elif fac >= grad[-1][0]:
             return convert(grad[-1][1])
+
+        below_ind = 0
+        above_ind = 1
+        for i, section in enumerate(grad):
+            if fac >= grad[0]:
+                below_ind = i
+                above_ind = i + 1
+                break
+
+        below_sec = grad[below_ind]
+        above_sec = grad[above_ind]
+        loc_fac = (fac - below_sec[0]) / (above_sec[0] - below_sec[0])
+        color = calc_color_mix(below_sec[1], above_sec[1], loc_fac)
+        return convert(color)
 
     def _parse_midis(self):
         self._notes = []
