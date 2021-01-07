@@ -296,11 +296,12 @@ class Video:
             if playing and frame < total_frames:
                 frame += 1
 
-    def export(self, path: str, multicore: bool = False, notify: bool = False) -> None:
+    def export(self, path: str, multicore: bool = False, max_cores: int = multiprocessing.cpu_count(), notify: bool = False) -> None:
         """
         Exports video to path.
         :param path: Path to export, must be .mp4
         :param multicore: Uses multiple cores to export video. This may be faster, but takes more power and uses more disk space.
+        :param max_cores: Maximum cores to use when exporting.
         :param notify: Sends notification when done exporting (only works on linux).
         """
         def multicore_video(path, frames):
@@ -346,7 +347,7 @@ class Video:
 
         # Export frames
         if multicore:
-            num_cores = multiprocessing.cpu_count()
+            num_cores = min(multiprocessing.cpu_count(), max_cores)
             processes = []
 
             tmp_imgs_path = os.path.join(parent, hash)
