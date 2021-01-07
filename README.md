@@ -1,9 +1,11 @@
 # PianoVis 0.1.7
+
 A Python piano video exporter.
 
 <br>
 
 ## Quick Start
+
 1. Install PianoVis: `pip install piano-vis`
 2. Follow this code format:
 ```
@@ -23,6 +25,7 @@ vid.export("video.mp4")
 <br>
 
 ## pianovis.Video
+
 `pianovis.Video` is the main video class which stores all midi and audio files, and exports the final video.
 * `Video.__init__(resolution: Tuple[int, int], fps: int, offset: int) -> None`
     * Initializes video.
@@ -56,6 +59,7 @@ vid.export("video.mp4")
 <br>
 
 ## Customization
+
 Run `Video.configure` to change options.
 * `keys.white.gap`: Gap (pixels) between white keys.
 * `keys.white.color`: Color (RGB) of white keys.
@@ -72,6 +76,7 @@ Run `Video.configure` to change options.
 <br>
 
 ## How It Works
+
 * The user adds midis and sets an audio.
 * When the user calls `Video.export`, a few things happen:
     * All midis are parsed.
@@ -83,3 +88,10 @@ Run `Video.configure` to change options.
         * Each frame is encoded with opencv.
         * All temporary files are deleted.
     * The audio is combined with video with ffmpeg.
+
+## Extras
+
+#### Constants (`pianovis.constants`)
+_Note: pianovis.BLACK == pianovis.constants.BLACK_
+* Colors
+* Block color gradient presets.
