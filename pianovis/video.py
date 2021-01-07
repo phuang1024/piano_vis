@@ -269,7 +269,8 @@ class Video:
         if self._decor_surf is not None:
             width, height = self._decor_surf.get_size()
             x = (self._res[0]-width) // 2
-            y = (self._res[1]-height) // 2
+            y = (self._res[1]//4-height) // 2
+            y += self._res[1] * 3 // 4
             surface.blit(self._decor_surf, (x, y))
 
         return surface
