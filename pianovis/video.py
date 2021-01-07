@@ -237,20 +237,23 @@ class Video:
 
         return surface
 
-    def preview(self, resolution: Tuple[int, int] = (1600, 900)):
+    def preview(self, resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True):
         """
         Previews the video with a Pygame window (no audio).
         :param resolution: Resolution of window.
         """
-        pygame.display.set_caption("PianoVis - Preview")
-        window = pygame.display.set_mode(resolution)
-
         self._parse_midis()
         total_frames = self._calc_num_frames()
 
+        pygame.display.set_caption("PianoVis - Preview")
+        window = pygame.display.set_mode(resolution)
+        font = pygame.font.SysFont("ubuntu", 14)
+
         clock = PreciseClock(self._fps)
         frame = 0
+        fps = self._fps
         while True:
+            start = time.time()
             clock.tick()
             pygame.display.update()
             for event in pygame.event.get():
@@ -259,13 +262,25 @@ class Video:
                     return
 
             window.fill((0, 0, 0))
+            rend_start = time.time()
             surface = self._render(frame)
+            rend_time = str(time.time() - rend_start)[:6]
+            idle_time = str((1/self._fps) - float(rend_time))[:6]
+
             surface = pygame.transform.scale(surface, resolution)
             window.blit(surface, (0, 0))
+
+            if show_meta:
+                window.blit(font.render(f"Frame: {frame}", 1, (255, 255, 255)), (20, 20))
+                window.blit(font.render(f"Render time: {rend_time}", 1, (255, 255, 255)), (20, 40))
+                window.blit(font.render(f"Idle time: {idle_time}", 1, (255, 255, 255)), (20, 60))
+                window.blit(font.render(f"FPS: {fps}", 1, (255, 255, 255)), (20, 80))
 
             frame += 1
             if frame >= total_frames:
                 return
+
+            fps = str(1 / (time.time() - start))[:6]
 
     def export(self, path: str, multicore: bool = False, notify: bool = False) -> None:
         """
