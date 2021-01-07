@@ -63,7 +63,9 @@ Run `Video.configure` to change options.
 * `keys.black.height_fac`: Factor of white key height.
 * `keys.black.color`: Color (RGB) of black keys.
 * `blocks.speed`: Speed (pixels per second) of blocks.
+* `blocks.border`: Border width (pixels) of blocks.
 * `blocks.color_grad`: Color gradient of blocks: ((fac1, hsv1), (fac2, hsv2)...)
+* `blocks.color_border`: Color (RGB) of border.
 * `blocks.rounding`: Rounding radius of blocks.
 * `blocks.motion_blur`: Use motion blur in blocks.
 
