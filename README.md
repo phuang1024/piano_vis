@@ -26,31 +26,31 @@ vid.export("video.mp4")
 `pianovis.Video` is the main video class which stores all midi and audio files, and exports the final video.
 * `Video.__init__(resolution: Tuple[int, int], fps: int, offset: int) -> None`
     * Initializes video.
-    * resolution: (x, y) pixel resolution of video.
-    * fps: FPS (frames per second) of video.
-    * offset: Offset (frames) of video from audio. Usually, a value of 1 makes the video look lined up with the audio.
-    * return: None
+    * `resolution`: (x, y) pixel resolution of video.
+    * `fps`: FPS (frames per second) of video.
+    * `offset`: Offset (frames) of video from audio. Usually, a value of 1 makes the video look lined up with the audio.
+    * `return`: None
 * `Video.configure(path: str, value: Any) -> None`
     * Sets an option for the video (read more in the Customization section).
-    * path: Option path.
-    * value: Value to set path to.
-    * return: None
+    * `path`: Option path.
+    * `value`: Value to set path to.
+    * `return`: None
 * `Video.add_midi(path: str) -> None`
     * Appends path to midi list.
-    * path: Midi file path.
+    * `path`: Midi file path.
 * `Video.set_audio(path: str) -> None`
     * Sets audio file to path.
-    * path: Audio file path.
+    * `path`: Audio file path.
 * `Video.preview(resolution: Tuple[int, int] = (1600, 900), show_meta: bool = True) -> None:`
     * Opens a pygame window to preview the animation.
-    * resolution=(1600, 900): Resolution of pygame window.
-    * show_meta=True: Show metadata in the corner of window.
+    * `resolution`=(1600, 900): Resolution of pygame window.
+    * `show_meta`=True: Show metadata in the corner of window.
 * `Video.export(self, path: str, multicore: bool = False, max_cores: int = multiprocessing.cpu_count(), notify: bool = False) -> None:`
     * Exports video to path.
-    * path: Path to export (mp4)
-    * multicore=False: Use multiple cores to export. Can be faster, but will take more power.
-    * max_cores=multiprocessing.cpu_count(): Maximum cores to use. Only relevant if using multicore.
-    * notify=False: Sends notification when done exporting. Only works on linux.
+    * `path`: Path to export (mp4)
+    * `multicore`=False: Use multiple cores to export. Can be faster, but will take more power.
+    * `max_cores`=multiprocessing.cpu_count(): Maximum cores to use. Only relevant if using multicore.
+    * `notify`=False: Sends notification when done exporting. Only works on linux.
 
 <br>
 
