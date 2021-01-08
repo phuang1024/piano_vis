@@ -121,7 +121,7 @@ class Video:
         """Sets audio file."""
         self._audio_path = path
 
-    def _color_mix(col1, col2, fac):
+    def _color_mix(self, col1, col2, fac):
         diff = [col2[i]-col1[i] for i in range(3)]
         color = [col1[i]+diff[i]*fac for i in range(3)]
         return color
@@ -258,15 +258,17 @@ class Video:
         for key in playing:
             white = self._is_white(key)
             x_range = (self._find_x_loc(key), self._find_x_loc(key) + (white_width if white else black_width) + 5)
+            x_range = list(map(int, x_range))
 
             for i in range(20):
                 curr_y = self._res[1] // 2 - i
-                for x in range(x_range):
+                for x in range(*x_range):
                     curr_loc = (x, curr_y)
                     color = surface.get_at(curr_loc)
                     if color[:3] != (0, 0, 0):
-                        target_col = self._get_color(key)
-                        fac = 1 - (i / 20)
+                        fac = i / 20
+                        new_col = self._color_mix((255, 255, 255), self._get_color(key), fac)
+                        surface.set_at(curr_loc, new_col)
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
