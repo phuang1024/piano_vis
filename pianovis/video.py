@@ -121,6 +121,11 @@ class Video:
         """Sets audio file."""
         self._audio_path = path
 
+    def _color_mix(col1, col2, fac):
+        diff = [col2[i]-col1[i] for i in range(3)]
+        color = [col1[i]+diff[i]*fac for i in range(3)]
+        return color
+
     def _get_color(self, key):
         def convert(color):
             color = list(color)
@@ -129,11 +134,6 @@ class Video:
             color[1] *= self._options["blocks.color_saturation"]
             color[2] *= self._options["blocks.color_value"]
             color = [255*x for x in colorsys.hsv_to_rgb(*color)]
-            return color
-
-        def calc_color_mix(col1, col2, fac):
-            diff = [col2[i]-col1[i] for i in range(3)]
-            color = [col1[i]+diff[i]*fac for i in range(3)]
             return color
 
         grad = self._options["blocks.color_grad"]
@@ -160,7 +160,7 @@ class Video:
         below_sec = grad[below_ind]
         above_sec = grad[above_ind]
         loc_fac = (fac - below_sec[0]) / (above_sec[0] - below_sec[0])
-        color = calc_color_mix(below_sec[1], above_sec[1], loc_fac)
+        color = self._color_mix(below_sec[1], above_sec[1], loc_fac)
         return convert(color)
 
     def _parse_midis(self):
@@ -196,11 +196,6 @@ class Video:
         return int(max_note[2] + 30)
 
     def _render_piano(self, keys):
-        def calc_color_mix(col1, col2, fac):
-            diff = [col2[i]-col1[i] for i in range(3)]
-            color = [col1[i]+diff[i]*fac for i in range(3)]
-            return color
-
         surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         width_white = self._key_width - self._options["keys.white.gap"]
         width_black = self._key_width * self._options["keys.black.width_fac"]
@@ -218,7 +213,7 @@ class Video:
                 height /= self._key_subdivs
                 height += 1
                 for i in range(self._key_subdivs):
-                    curr_col = calc_color_mix(self._get_color(index), color, i/self._key_subdivs)
+                    curr_col = self._color_mix(self._get_color(index), color, i/self._key_subdivs)
                     pygame.draw.rect(surface, curr_col, (x_loc, self._key_y_loc+i*height_inc, width, height))
 
             else:
