@@ -31,7 +31,7 @@ from hashlib import sha256
 from colorama import Fore
 from playsound import playsound
 from .constants import *
-from .utils import PreciseClock, print_process
+from .utils import PreciseClock, PrintProcess, print_process
 pygame.init()
 colorama.init()
 
@@ -523,7 +523,16 @@ class Video:
             os.system(command)
         os.remove(tmp_vid_path)
 
+        print_process.finish("Finished exporting animation.")
         print(Fore.WHITE + "-" * 50)
 
-        if notify and sys.platform == "linux":
-            os.system("notify-send \"Piano Vis\" \"Finished exporting an animation!\"")
+        if notify:
+            if sys.platform == "linux":
+                os.system("notify-send \"Piano Vis\" \"Finished exporting an animation!\"")
+            elif sys.platform == "windows":
+                try:
+                    from win10toast import ToastNotifier
+                    toast = ToastNotifier()
+                    toast.show_toast("Piano Vis", "Finished exporting an animation!", duration=10)
+                except ModuleNotFoundError:
+                    print("win10toast not found. Install with \"pip install win10toast\" to show notifications.")
