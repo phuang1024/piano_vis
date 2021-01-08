@@ -14,6 +14,15 @@ Examples:
 ## Quick Start
 
 1. Install PianoVis: `pip install piano-vis`
+    * Dependencies:
+        * pygame
+        * opencv-python
+        * mido
+        * colorama
+        * vext
+        * vext.gi
+        * playsound
+        * win10toast (only on Windows)
 2. Follow this code format:
 ```
 import pianovis
