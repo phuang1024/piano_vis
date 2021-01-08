@@ -89,7 +89,7 @@ class Video:
         self._key_locs = sorted(self._key_locs, key=(lambda x: 0 if x[1] else 1))
 
     def _is_white(self, key):
-        return False if (key-3) % 12 in (1, 3, 6, 8, 10) else True
+        return (key-3) % 12 not in (1, 3, 6, 8, 10)
 
     def _find_x_loc(self, key):
         width, height = self._res
