@@ -75,9 +75,13 @@ Run `Video.configure` to change options.
 * `blocks.speed`: Speed (pixels per second) of blocks.
 * `blocks.border`: Border width (pixels) of blocks.
 * `blocks.color_grad`: Color gradient of blocks: ((fac1, hsv1), (fac2, hsv2)...)
+* `blocks.color_hue`: Hue adjustment (additive) to color.
+* `blocks.color_saturation`: Saturation adjustment (multiplicative) to color.
+* `blocks.color_value`: Value adjustment (multiplicative) to color.
 * `blocks.color_border`: Color (RGB) of border.
 * `blocks.rounding`: Rounding radius of blocks.
 * `blocks.motion_blur`: Use motion blur in blocks.
+* `blocks.light`: Light up blocks when hit. Still in development.
 
 <br>
 
