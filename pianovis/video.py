@@ -79,6 +79,7 @@ class Video:
             "blocks.color_border": (255, 255, 255),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
+            "blocks.light": False,
         }
 
         # Key positions
@@ -255,20 +256,21 @@ class Video:
                         border, border_radius=radius)
 
         # Glowing
-        for key in playing:
-            white = self._is_white(key)
-            x_range = (self._find_x_loc(key), self._find_x_loc(key) + (white_width if white else black_width) + 5)
-            x_range = list(map(int, x_range))
+        if self._options["blocks.light"]:
+            for key in playing:
+                white = self._is_white(key)
+                x_range = (self._find_x_loc(key), self._find_x_loc(key) + (white_width if white else black_width) + 5)
+                x_range = list(map(int, x_range))
 
-            for i in range(20):
-                curr_y = self._res[1] // 2 - i
-                for x in range(*x_range):
-                    curr_loc = (x, curr_y)
-                    color = surface.get_at(curr_loc)
-                    if color[:3] != (0, 0, 0):
-                        fac = i / 20
-                        new_col = self._color_mix((255, 255, 255), self._get_color(key), fac)
-                        surface.set_at(curr_loc, new_col)
+                for i in range(20):
+                    curr_y = self._res[1] // 2 - i
+                    for x in range(*x_range):
+                        curr_loc = (x, curr_y)
+                        color = surface.get_at(curr_loc)
+                        if color[:3] != (0, 0, 0):
+                            fac = i / 20
+                            new_col = self._color_mix((255, 255, 255), self._get_color(key), fac)
+                            surface.set_at(curr_loc, new_col)
 
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
