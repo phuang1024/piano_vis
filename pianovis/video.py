@@ -281,6 +281,10 @@ class Video:
         :param resolution: Resolution of window.
         :param audio: Play with audio but no jumping forward or backward.
         """
+        def play_audio(path):
+            time.sleep(0.03)
+            playsound(path)
+
         self._parse_midis()
         total_frames = self._calc_num_frames()
 
@@ -294,7 +298,7 @@ class Video:
         fps = self._fps
         playing = True
         if audio and self._audio_path is not None:
-            threading.Thread(target=playsound, args=(self._audio_path,)).start()
+            threading.Thread(target=play_audio, args=(self._audio_path,)).start()
 
         while True:
             start = time.time()
