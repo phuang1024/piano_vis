@@ -60,7 +60,7 @@ vid.export("video.mp4")
     * `path`: Path to export (mp4)
     * `multicore`=False: Use multiple cores to export. Can be faster, but will take more power.
     * `max_cores`=multiprocessing.cpu_count(): Maximum cores to use. Only relevant if using multicore.
-    * `notify`=False: Sends notification when done exporting. Only works on linux.
+    * `notify`=False: Sends notification when done exporting. Requires `win10toast` on Windows.
 
 <br>
 
