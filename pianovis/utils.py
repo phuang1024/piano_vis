@@ -43,3 +43,6 @@ class PreciseClock:
         while time.time() < self.next_tick:
             time.sleep(0.001)
         self.next_tick += self.pause_time
+
+
+print_process = PrintProcess()

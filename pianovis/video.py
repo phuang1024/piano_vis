@@ -31,7 +31,7 @@ from hashlib import sha256
 from colorama import Fore
 from playsound import playsound
 from .constants import *
-from .utils import PreciseClock, PrintProcess
+from .utils import PreciseClock, print_process
 pygame.init()
 colorama.init()
 
@@ -161,11 +161,10 @@ class Video:
     def _parse_midis(self):
         self._notes = []
         num_midis = len(self._midi_paths)
-        process = PrintProcess()
 
         for i, path in enumerate(self._midi_paths):
             print_msg = f"Parsing midi {i+1} of {num_midis}"
-            process.write(print_msg)
+            print_process.write(print_msg)
             midi = mido.MidiFile(path)
             tpb = midi.ticks_per_beat
 
@@ -183,9 +182,9 @@ class Video:
                     else:
                         starts[note] = curr_frame
 
-            process.clear(print_msg)
+            print_process.clear(print_msg)
 
-        process.finish(f"Finished parsing {num_midis} midis.")
+        print_process.finish(f"Finished parsing {num_midis} midis.")
 
     def _calc_num_frames(self):
         max_note = max(self._notes, key=(lambda x: x[2]))
@@ -357,7 +356,6 @@ class Video:
         """
         def multicore_video(path, frames):
             video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
-            process = PrintProcess()
             start = time.time()
             for i in range(frames):
                 msg = f"Encoding frame {i} of {frames}"
@@ -367,13 +365,13 @@ class Video:
                 progress = int(percent * 50)
                 progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
                 final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
-                process.write(final_msg)
+                print_process.write(final_msg)
 
                 if os.path.isfile(curr_img_path := os.path.join(path, f"{i}.png")):
                     video.write(cv2.imread(curr_img_path))
-                process.clear(final_msg)
+                print_process.clear(final_msg)
 
-            process.finish(f"Finished encoding {frames} frames.")
+            print_process.finish(f"Finished encoding {frames} frames.")
             video.release()
 
         def multicore_export(path, start, end):
@@ -420,7 +418,6 @@ class Video:
 
                     curr_start += inc + 1
 
-                print_process = PrintProcess()
                 start = time.time()
                 while True:
                     num_frames = len(os.listdir(tmp_imgs_path))
@@ -469,7 +466,6 @@ class Video:
             video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
 
             try:
-                process = PrintProcess()
                 start = time.time()
                 for i in range(frames):
                     msg = f"Exporting frame {i} of {frames}"
@@ -479,15 +475,15 @@ class Video:
                     progress = int(percent * 50)
                     progress_msg = "[{}{}] {}%".format("#"*int(progress), "-"*int(50-progress), int(percent*100))
                     final_msg = "{}    Remaining: {}    {}".format(msg, str(left)[:6], progress_msg)
-                    process.write(final_msg)
+                    print_process.write(final_msg)
 
                     surf = self._render(i)
                     pygame.image.save(surf, tmp_img_path)
                     video.write(cv2.imread(tmp_img_path))
 
-                    process.clear(final_msg)
+                    print_process.clear(final_msg)
 
-                process.finish(f"Finished exporting {frames} frames.")
+                print_process.finish(f"Finished exporting {frames} frames.")
 
                 video.release()
                 cv2.destroyAllWindows()
