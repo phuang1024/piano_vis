@@ -330,13 +330,13 @@ class Video:
 
                 elif event.type == pygame.KEYDOWN and not audio:
                     if event.key == pygame.K_LEFT:
-                        frame -= 100
+                        frame -= 1
                     elif event.key == pygame.K_RIGHT:
-                        frame += 100
+                        frame += 1
                     elif event.key == pygame.K_DOWN:
-                        frame -= 1000
+                        frame -= 100
                     elif event.key == pygame.K_UP:
-                        frame += 1000
+                        frame += 100
                     elif event.key == pygame.K_SPACE:
                         playing = not playing
 
