@@ -73,7 +73,9 @@ class Video:
             "blocks.speed": 180,
             "blocks.border": 0,
             "blocks.color_grad": BLOCK_PRESET_RAINBOW,
+            "blocks.color_hue": 0,
             "blocks.color_saturation": 0.9,
+            "blocks.color_value": 1,
             "blocks.color_border": (255, 255, 255),
             "blocks.rounding": 5,
             "blocks.motion_blur": True,
@@ -122,7 +124,10 @@ class Video:
     def _get_color(self, key):
         def convert(color):
             color = list(color)
+            color[0] += self._options["blocks.color_hue"]
+            color[0] = color[0] % 1
             color[1] *= self._options["blocks.color_saturation"]
+            color[2] *= self._options["blocks.color_value"]
             color = [255*x for x in colorsys.hsv_to_rgb(*color)]
             return color
 
