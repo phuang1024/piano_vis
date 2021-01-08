@@ -39,7 +39,7 @@ colorama.init()
 class Video:
     """Video class that contains midis and export."""
     _key_subdivs = 50
-    _block_subdivs = 20
+    _block_glow_height = 20
 
     def __init__(self, resolution: Tuple[int, int], fps: int, offset: int, decor_surf: pygame.Surface = None) -> None:
         """
@@ -231,7 +231,7 @@ class Video:
         pygame.draw.rect(surface, (0, 0, 0), (0, self._res[1]/4*3, self._res[0], self._res[1]/4))
         return surface
 
-    def _render_blocks(self, frame):
+    def _render_blocks(self, frame, playing):
         surface = pygame.Surface(self._res, pygame.SRCALPHA)
         width, height = self._res
         y_offset = height / 2
@@ -259,6 +259,20 @@ class Video:
                     pygame.draw.rect(surface, self._options["blocks.color_border"], (x_loc, top_y, width-1, height),
                         border, border_radius=radius)
 
+        # Glowing
+        for key in playing:
+            white = self._is_white(key)
+            x_range = (self._find_x_loc(key), self._find_x_loc(key) + (white_width if white else black_width) + 5)
+
+            for i in range(20):
+                curr_y = self._res[1] // 2 - i
+                for x in range(x_range):
+                    curr_loc = (x, curr_y)
+                    color = surface.get_at(curr_loc)
+                    if color[:3] != (0, 0, 0):
+                        target_col = self._get_color(key)
+                        fac = 1 - (i / 20)
+
         pygame.draw.rect(surface, (0, 0, 0), (0, y_offset, *self._res))
         return surface
 
@@ -271,7 +285,7 @@ class Video:
                 playing.append(note[0])
         playing = list(set(playing))
 
-        surface.blit(self._render_blocks(frame), (0, 0))
+        surface.blit(self._render_blocks(frame, playing), (0, 0))
         surface.blit(self._render_piano(playing), (0, 0))
 
         if self._decor_surf is not None:
