@@ -302,6 +302,20 @@ class Video:
         :param resolution: Resolution of window.
         :param audio: Play with audio but no jumping forward or backward.
         """
+        def get_note_info(frame):
+            notes = self._notes
+            info = {"played": 0, "playing": 0, "to_play": 0}
+            for note in notes:
+                start, end = note[1], note[2]
+                if frame < start:
+                    info["to_play"] += 1
+                elif frame >= start:
+                    info["played"] += 1
+                    if frame <= end:
+                        info["playing"] += 1
+
+            return info
+
         def play_audio(path):
             time.sleep(0.03)
             playsound(path)
@@ -355,10 +369,18 @@ class Video:
             window.blit(surface, (0, 0))
 
             if show_meta:
+                note_info = get_note_info(frame)
+                num_to_play = note_info["to_play"]
+                num_playing = note_info["playing"]
+                num_played = note_info["played"]
+
                 window.blit(font.render(f"Frame: {frame}", 1, (255, 255, 255)), (20, 20))
                 window.blit(font.render(f"Render time: {rend_time}", 1, (255, 255, 255)), (20, 40))
                 window.blit(font.render(f"Idle time: {idle_time}", 1, (255, 255, 255)), (20, 60))
                 window.blit(font.render(f"FPS: {fps}", 1, (255, 255, 255)), (20, 80))
+                window.blit(font.render(f"Notes to play: {num_to_play}", 1, (255, 255, 255)), (20, 100))
+                window.blit(font.render(f"Notes playing: {num_playing}", 1, (255, 255, 255)), (20, 120))
+                window.blit(font.render(f"Notes played: {num_played}", 1, (255, 255, 255)), (20, 140))
 
             fps = str(1 / (time.time() - start))[:6]
             if playing and frame < total_frames:
