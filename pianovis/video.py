@@ -196,6 +196,9 @@ class Video:
         max_note = max(self._notes, key=(lambda x: x[2]))
         return int(max_note[2] + 30)
 
+    def _prep_render(self):
+        self._parse_midis()
+
     def _render_piano(self, keys):
         surface = pygame.Surface((1920, 1080), pygame.SRCALPHA)
         width_white = self._key_width - self._options["keys.white.gap"]
@@ -320,7 +323,7 @@ class Video:
             time.sleep(0.03)
             playsound(path)
 
-        self._parse_midis()
+        self._prep_render()
         total_frames = self._calc_num_frames()
 
         pygame.display.set_caption("PianoVis - Preview")
@@ -431,7 +434,7 @@ class Video:
         parent = os.path.realpath(os.path.dirname(__file__))
 
         hash = get_hash()
-        self._parse_midis()
+        self._prep_render()
         frames = self._calc_num_frames()
 
         # Export frames
