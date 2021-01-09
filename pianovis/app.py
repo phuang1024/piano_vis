@@ -29,7 +29,8 @@ def launch():
     window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
 
     width, height = 1280, 720
-    new_size = (width, height)
+    video = Video((1920, 1080), 30, 1)
+
     resized = False
     clock = PreciseClock(60)
     while True:
@@ -43,10 +44,15 @@ def launch():
 
             elif event.type == pygame.VIDEORESIZE:
                 resized = True
-                new_size = event.size
+                width, height = event.size
 
             elif event.type == pygame.ACTIVEEVENT and resized:
-                window = pygame.display.set_mode(new_size, pygame.RESIZABLE)
+                window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
                 resized = False
 
+        vid_loc = list(map(int, (width//8, 50)))
+        vid_size = list(map(int, (width/2, width*9/32)))
+
         window.fill(BLACK)
+        window.blit(pygame.transform.scale(video._render(0), vid_size), vid_loc)
+        pygame.draw.rect(window, WHITE, (*vid_loc, *vid_size), 1)
