@@ -55,6 +55,7 @@ class Video:
         self._decor_surf = decor_surf
         self._midi_paths = []
         self._audio_path = None
+        self._notes = []
         self._gen_info()
 
     def _gen_info(self):
