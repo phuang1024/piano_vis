@@ -24,7 +24,7 @@ Examples:
         * playsound
         * win10toast (only on Windows)
 2. Follow this code format:
-```
+```python3
 import pianovis
 
 resolution = (1920, 1080)
