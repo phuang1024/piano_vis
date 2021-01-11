@@ -22,7 +22,11 @@ pygame.init()
 
 # General
 PARENT = os.path.realpath(os.path.dirname(__file__))
-LOGO = pygame.image.load(os.path.join(PARENT, "images", "logo.png"))
+try:
+    LOGO = pygame.image.load(os.path.join(PARENT, "images", "logo.png"))
+except:
+    print("Could not load logo image.")
+    LOGO = pygame.Surface((100, 100))
 
 
 # Colors
