@@ -57,14 +57,19 @@ RED_2 = (1, 1, 1)
 # Block presets
 BLOCK_PRESET_RAINBOW = (
     (0, RED_1),
-    (1, RED_2)
+    (1, RED_2),
+)
+BLOCK_PRESET_RAINBOW_MIRROR = (
+    (0, RED_1),
+    (0.5, RED_2),
+    (1, RED_1),
 )
 BLOCK_PRESET_CHRISTMAS_1 = (
     (0, RED_1), (0.199, RED_1),
     (0.2, GREEN), (0.399, GREEN),
     (0.4, WHITE), (0.599, WHITE),
     (0.6, RED_1), (0.799, RED_1),
-    (0.8, GREEN), (1, GREEN)
+    (0.8, GREEN), (1, GREEN),
 )
 BLOCK_PRESET_CHRISTMAS_2 = (
     (0, GREEN), (0.099, GREEN),
@@ -76,5 +81,5 @@ BLOCK_PRESET_CHRISTMAS_2 = (
     (0.6, GREEN), (0.699, GREEN),
     (0.7, RED_1), (0.799, RED_1),
     (0.8, WHITE), (0.899, WHITE),
-    (0.9, GREEN), (1, GREEN)
+    (0.9, GREEN), (1, GREEN),
 )
