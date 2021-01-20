@@ -64,6 +64,11 @@ BLOCK_PRESET_RAINBOW_MIRROR = (
     (0.5, RED_2),
     (1, RED_1),
 )
+BLOCK_PRESET_RAINBOW_DOUBLE = (
+    (0, RED_1),
+    (0.5, RED_2),
+    (1, (2, 1, 1)),
+)
 BLOCK_PRESET_CHRISTMAS_1 = (
     (0, RED_1), (0.199, RED_1),
     (0.2, GREEN), (0.399, GREEN),
