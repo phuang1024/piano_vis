@@ -411,7 +411,7 @@ class Video:
         :param path: Path to export, must be .mp4
         :param multicore: Uses multiple cores to export video. This may be faster, but takes more power and uses more disk space.
         :param max_cores: Maximum cores to use when exporting.
-        :param notify: Sends notification when done exporting (only works on linux).
+        :param notify: Sends notification when done exporting (requres win10toast on Windows, does not work on Mac).
         """
         def multicore_video(path, frames):
             video = cv2.VideoWriter(tmp_vid_path, cv2.VideoWriter_fourcc(*"MPEG"), self._fps, self._res)
