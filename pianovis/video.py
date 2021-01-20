@@ -29,7 +29,6 @@ import colorama
 from typing import Any, Tuple
 from hashlib import sha256
 from colorama import Fore
-from playsound import playsound
 from .constants import *
 from .utils import PreciseClock, PrintProcess, print_process
 pygame.init()
@@ -306,6 +305,22 @@ class Video:
         :param resolution: Resolution of window.
         :param audio: Play with audio but no jumping forward or backward.
         """
+        try:
+            from playsound import playsound
+        except ModuleNotFoundError:
+            print("Module \"playsound\" not found. Install?")
+            print("    These packages will be installed:")
+            print("    * playsound")
+            print("    * vext")
+            print("    * vext.gi")
+            result = input("Install? (y/n) ")
+            if result.lower() == "y":
+                os.system("pip install playsound")
+                os.system("pip install vext")
+                os.system("pip install vext.gi")
+            else:
+                return
+
         def get_note_info(frame):
             notes = self._notes
             info = {"played": 0, "playing": 0, "to_play": 0}
