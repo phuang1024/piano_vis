@@ -24,9 +24,16 @@ GRAY = (128, 128, 128)
 WHITE = (255, 255, 255)
 
 
-def launch():
+def launch(resizable=True):
+    """
+    Starts pianovis app.
+    :param resizable: Make the window resizable?
+    """
     pygame.display.set_caption("Piano Visualizer - App")
-    window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+    if resizable:
+        window = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+    else:
+        window = pygame.display.set_mode((1600, 900))
 
     width, height = 1280, 720
     video = Video((1920, 1080), 30, 1)
