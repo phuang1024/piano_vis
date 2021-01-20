@@ -30,7 +30,7 @@ from typing import Any, Tuple
 from hashlib import sha256
 from colorama import Fore
 from .constants import *
-from .utils import PreciseClock, PrintProcess, print_process
+from .utils import PreciseClock, print_process
 pygame.init()
 colorama.init()
 
