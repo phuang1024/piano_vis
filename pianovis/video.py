@@ -72,7 +72,7 @@ class Video:
             "keys.black.color": (64, 64, 64),
             "blocks.speed": 180,
             "blocks.border": 0,
-            "blocks.color_grad": BLOCK_PRESET_RAINBOW,
+            "blocks.color_grad": BLOCK_RAINBOW,
             "blocks.color_hue": 0,
             "blocks.color_saturation": 0.9,
             "blocks.color_value": 1,
