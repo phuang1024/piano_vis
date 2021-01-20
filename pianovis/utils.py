@@ -28,7 +28,9 @@ class PrintProcess:
         sys.stdout.flush()
 
     def clear(self, msg):
-        sys.stdout.write("{0}{1}{0}".format("\b"*len(msg), " "*len(msg)))
+        sys.stdout.write("\r")
+        sys.stdout.write(" "*len(msg))
+        sys.stdout.write("\r")
 
     def finish(self, msg):
         print(Fore.GREEN + msg + Fore.WHITE)
