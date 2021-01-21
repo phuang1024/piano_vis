@@ -96,3 +96,6 @@ def launch_v1(resizable=True):
 
         window.fill(BLACK)
         video.draw(window, events, vid_loc, vid_size)
+
+
+launch = launch_v1
