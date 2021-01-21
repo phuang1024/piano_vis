@@ -19,9 +19,9 @@ Examples:
         * opencv-python
         * mido
         * colorama
-        * vext
-        * vext.gi
-        * playsound
+        * vext (optional, for playing sound during preview)
+        * vext.gi (optional, for playing sound during preview)
+        * playsound (optional, for playing sound during preview)
         * win10toast (only on Windows)
 2. Follow this code format:
 ```python3
