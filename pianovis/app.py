@@ -24,7 +24,18 @@ GRAY = (128, 128, 128)
 WHITE = (255, 255, 255)
 
 
-def launch(resizable=True):
+class V1_Video:
+    def __init__(self):
+        self.video = Video((1920, 1080), 30, 1)
+        self.frame = 0
+
+    def draw(self, window, events, loc, size):
+        surface = pygame.transform.scale(self.video._render(self.frame), size)
+        window.blit(surface, loc)
+        pygame.draw.rect(window, WHITE, (*loc, *size), 1)
+
+
+def launch_v1(resizable=True):
     """
     Starts pianovis app.
     :param resizable: Make the window resizable?
@@ -38,10 +49,9 @@ def launch(resizable=True):
     width, height = 1280, 720
     resized = False
 
-    video = Video((1920, 1080), 30, 1)
-    frame = 0
+    video = V1_Video()
 
-    clock = PreciseClock(60)
+    clock = PreciseClock(30)
     while True:
         clock.tick()
         pygame.display.update()
@@ -60,8 +70,7 @@ def launch(resizable=True):
                 resized = False
 
         vid_loc = list(map(int, (width//8, 50)))
-        vid_size = list(map(int, (width/2, width*9/32)))
+        vid_size = list(map(int, (width*2/3, width*3/8)))
 
         window.fill(BLACK)
-        window.blit(pygame.transform.scale(video._render(0), vid_size), vid_loc)
-        pygame.draw.rect(window, WHITE, (*vid_loc, *vid_size), 1)
+        video.draw(window, events, vid_loc, vid_size)
