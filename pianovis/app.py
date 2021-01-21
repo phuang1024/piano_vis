@@ -36,9 +36,11 @@ def launch(resizable=True):
         window = pygame.display.set_mode((1600, 900))
 
     width, height = 1280, 720
-    video = Video((1920, 1080), 30, 1)
-
     resized = False
+
+    video = Video((1920, 1080), 30, 1)
+    frame = 0
+
     clock = PreciseClock(60)
     while True:
         clock.tick()
