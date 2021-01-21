@@ -16,8 +16,8 @@
 # ##### END GPL LICENSE BLOCK #####
 
 import pygame
-from .video import Video
-from .utils import PreciseClock
+from ..video import Video
+from ..utils import PreciseClock
 pygame.init()
 
 BLACK = (0, 0, 0)
@@ -27,7 +27,7 @@ WHITE = (255, 255, 255)
 FONT_SMALL = pygame.font.SysFont("ubuntu", 14)
 
 
-class V1_Video:
+class VideoDisp:
     def __init__(self):
         self.video = Video((1920, 1080), 30, 1)
         self.time = 0
@@ -71,7 +71,7 @@ class V1_Video:
         self.frame = max(self.frame, 0)
 
 
-def launch_v1(resizable=True):
+def launch(resizable=True):
     """
     Starts pianovis app.
     :param resizable: Make the window resizable?
@@ -85,7 +85,7 @@ def launch_v1(resizable=True):
     width, height = 1280, 720
     resized = False
 
-    video = V1_Video()
+    video = VideoDisp()
 
     clock = PreciseClock(30)
     while True:
@@ -110,6 +110,3 @@ def launch_v1(resizable=True):
 
         window.fill(BLACK)
         video.draw(window, events, vid_loc, vid_size)
-
-
-launch = launch_v1
