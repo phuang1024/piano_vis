@@ -18,10 +18,13 @@
 import pygame
 from .video import Video
 from .utils import PreciseClock
+pygame.init()
 
 BLACK = (0, 0, 0)
 GRAY = (128, 128, 128)
 WHITE = (255, 255, 255)
+
+FONT_SMALL = pygame.font.SysFont("ubuntu", 14)
 
 
 class V1_Video:
@@ -38,6 +41,8 @@ class V1_Video:
         surface = pygame.transform.scale(self.video._render(self.frame), size)
         window.blit(surface, loc)
         pygame.draw.rect(window, WHITE, (*loc, *size), 1)
+
+        window.blit(FONT_SMALL.render(f"Frame: {self.frame}", 1, WHITE), (loc[0]+10, loc[1]+10))
 
         if self.playing:
             self.frame += 1
@@ -86,8 +91,8 @@ def launch_v1(resizable=True):
                 window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
                 resized = False
 
-        vid_loc = list(map(int, (width//8, 50)))
-        vid_size = list(map(int, (width*2/3, width*3/8)))
+        vid_loc = list(map(int, (50, 50)))
+        vid_size = list(map(int, (width*3/4, width*27/64)))
 
         window.fill(BLACK)
         video.draw(window, events, vid_loc, vid_size)
