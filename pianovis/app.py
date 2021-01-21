@@ -30,8 +30,11 @@ FONT_SMALL = pygame.font.SysFont("ubuntu", 14)
 class V1_Video:
     def __init__(self):
         self.video = Video((1920, 1080), 30, 1)
+        self.time = 0
         self.frame = 0
         self.playing = False
+
+        self.arrow_hold = 0
 
         self.video.add_midi("pianovis/examples/grieg1.mid")
         self.video.add_midi("pianovis/examples/grieg2.mid")
@@ -44,6 +47,7 @@ class V1_Video:
 
         window.blit(FONT_SMALL.render(f"Frame: {self.frame}", 1, WHITE), (loc[0]+10, loc[1]+10))
 
+        self.time += 1
         if self.playing:
             self.frame += 1
 
@@ -53,8 +57,18 @@ class V1_Video:
                     self.playing = not self.playing
                 elif event.key == pygame.K_RIGHT and not self.playing:
                     self.frame += 1
+                    self.arrow_hold = self.time
                 elif event.key == pygame.K_LEFT and not self.playing:
                     self.frame -= 1
+                    self.arrow_hold = self.time
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RIGHT] and self.time-self.arrow_hold > 20:
+            self.frame += 1
+        if keys[pygame.K_LEFT] and self.time-self.arrow_hold > 20:
+            self.frame -= 1
+
+        self.frame = max(self.frame, 0)
 
 
 def launch_v1(resizable=True):
