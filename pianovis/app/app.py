@@ -17,7 +17,7 @@
 
 import pygame
 from tkinter import Tk
-from tkinter.filedialog import askopenfilename
+from tkinter.filedialog import askopenfilename, askopenfilenames
 from ..video import Video
 from ..utils import PreciseClock
 pygame.init()
@@ -30,6 +30,7 @@ GRAY_LIGHT = (192, 192, 192)
 WHITE = (255, 255, 255)
 
 FONT_SMALL = pygame.font.SysFont("ubuntu", 14)
+FONT_MED = pygame.font.SysFont("ubuntu", 20)
 
 
 class Text:
@@ -74,6 +75,9 @@ class Button:
 
 
 class VideoDisp:
+    button_clear_midis = Button(FONT_MED.render("Clear MIDIs", 1, BLACK))
+    button_load_midi = Button(FONT_MED.render("Load MIDIs", 1, BLACK))
+
     def __init__(self):
         self.video = Video((1920, 1080), 30, 1)
         self.time = 0
@@ -82,16 +86,20 @@ class VideoDisp:
 
         self.arrow_hold = 0
 
-        self.video.add_midi("pianovis/examples/grieg1.mid")
-        self.video.add_midi("pianovis/examples/grieg2.mid")
-        self.video._prep_render()
-
     def draw(self, window, events, loc, size):
         surface = pygame.transform.scale(self.video._render(self.frame), size)
         window.blit(surface, loc)
         pygame.draw.rect(window, WHITE, (*loc, *size), 1)
 
         window.blit(FONT_SMALL.render(f"Frame: {self.frame}", 1, WHITE), (loc[0]+10, loc[1]+10))
+
+
+        if self.button_clear_midis.draw(window, events, (loc[0]+size[0]+100, loc[1]), (160, 40)):
+            self.video._midi_paths = []
+            self.video._prep_render()
+        if self.button_load_midi.draw(window, events, (loc[0]+size[0]+150, loc[1]), (160, 40)):
+            self.video._midi_paths.extend(askopenfilenames())
+            self.video._prep_render()
 
         self.time += 1
         if self.playing:
