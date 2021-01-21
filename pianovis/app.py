@@ -30,6 +30,10 @@ class V1_Video:
         self.frame = 0
         self.playing = False
 
+        self.video.add_midi("pianovis/examples/grieg1.mid")
+        self.video.add_midi("pianovis/examples/grieg2.mid")
+        self.video._prep_render()
+
     def draw(self, window, events, loc, size):
         surface = pygame.transform.scale(self.video._render(self.frame), size)
         window.blit(surface, loc)
