@@ -28,11 +28,24 @@ class V1_Video:
     def __init__(self):
         self.video = Video((1920, 1080), 30, 1)
         self.frame = 0
+        self.playing = False
 
     def draw(self, window, events, loc, size):
         surface = pygame.transform.scale(self.video._render(self.frame), size)
         window.blit(surface, loc)
         pygame.draw.rect(window, WHITE, (*loc, *size), 1)
+
+        if self.playing:
+            self.frame += 1
+
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.playing = not self.playing
+                elif event.key == pygame.K_RIGHT and not self.playing:
+                    self.frame += 1
+                elif event.key == pygame.K_LEFT and not self.playing:
+                    self.frame -= 1
 
 
 def launch_v1(resizable=True):
