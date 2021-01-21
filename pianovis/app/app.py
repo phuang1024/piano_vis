@@ -97,7 +97,7 @@ class VideoDisp:
         if self.button_clear_midis.draw(window, events, (loc[0]+size[0]+100, loc[1]), (160, 40)):
             self.video._midi_paths = []
             self.video._prep_render()
-        if self.button_load_midi.draw(window, events, (loc[0]+size[0]+150, loc[1]), (160, 40)):
+        if self.button_load_midi.draw(window, events, (loc[0]+size[0]+100, loc[1]+50), (160, 40)):
             self.video._midi_paths.extend(askopenfilenames())
             self.video._prep_render()
 
