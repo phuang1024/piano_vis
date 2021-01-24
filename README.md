@@ -1,7 +1,7 @@
 ![logo](pianovis/images/logo_large.png)
 
 
-# PianoVis 0.2.0
+# PianoVis 0.2.1
 
 A Python piano video exporter.
 
