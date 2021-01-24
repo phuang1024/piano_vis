@@ -1,5 +1,6 @@
 ![logo](pianovis/images/logo_large.png)
 
+
 # PianoVis 0.2.0
 
 A Python piano video exporter.
@@ -10,6 +11,7 @@ Examples:
 * [Sonatina (Clementi)](https://www.youtube.com/watch?v=kfebLsnU1qE)
 
 <br>
+
 
 ## Quick Start
 
@@ -39,6 +41,7 @@ vid.export("video.mp4")
 ```
 
 <br>
+
 
 ## pianovis.Video
 
@@ -73,6 +76,7 @@ vid.export("video.mp4")
 
 <br>
 
+
 ## Customization
 
 Run `Video.configure` to change options.
@@ -94,6 +98,7 @@ Run `Video.configure` to change options.
 
 <br>
 
+
 ## How It Works
 
 * The user adds midis and sets an audio.
@@ -114,3 +119,8 @@ Run `Video.configure` to change options.
 _Note: pianovis.BLACK == pianovis.constants.BLACK_
 * Colors (Normalized HSV)
 * Block color gradient presets.
+
+#### App (`pianovis.app`)
+* Create piano videos in a GUI.
+* Currently version 1 (in development)
+* Run `pianovis.app.launch()` to launch the latest version.
