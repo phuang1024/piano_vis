@@ -17,3 +17,4 @@
 
 from .constants import *
 from .video import Video
+from . import app
