@@ -17,6 +17,7 @@
 
 import os
 import pygame
+import threading
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename, askopenfilenames, asksaveasfilename
 from ..video import Video
@@ -87,6 +88,7 @@ class VideoDisp:
         self.playing = False
         self.arrow_hold = 0
         self.exporting = False
+        self.export_thread = None
 
     def draw(self, window, events, loc, size):
         surface = pygame.transform.scale(self.video._render(self.frame), size)
@@ -99,7 +101,8 @@ class VideoDisp:
         if self.button_export.draw(window, events, (loc[0]+size[0]+100, loc[1]), (160, 40)):
             if not self.exporting and (path:=asksaveasfilename()):
                 self.exporting = True
-                self.video.export(path, multicore=True)
+                self.export_thread = threading.Thread(target=self.video.export, args=(path, True))
+                self.export_thread.start()
         if self.button_clear_midis.draw(window, events, (loc[0]+size[0]+100, loc[1]+50), (160, 40)):
             self.video._midi_paths = []
             self.video._prep_render()
@@ -111,6 +114,12 @@ class VideoDisp:
             name = os.path.basename(path)
             text = FONT_SMALL.render(name, 1, WHITE)
             window.blit(text, (loc[0]+size[0]+20, loc[1]+120+i*20))
+
+        if self.exporting:
+            window.blit(FONT_SMALL.render("Exporting video", 1, WHITE), (loc[0]+30, loc[1]+10))
+            if not self.export_thread.is_alive():
+                self.exporting = False
+            return
 
         self.time += 1
         if self.playing:
