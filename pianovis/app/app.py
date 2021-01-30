@@ -18,7 +18,7 @@
 import os
 import pygame
 from tkinter import Tk
-from tkinter.filedialog import askopenfilename, askopenfilenames
+from tkinter.filedialog import askopenfilename, askopenfilenames, asksaveasfilename
 from ..video import Video
 from ..utils import PreciseClock
 pygame.init()
@@ -76,6 +76,7 @@ class Button:
 
 
 class VideoDisp:
+    button_export = Button(FONT_MED.render("Export", 1, BLACK))
     button_clear_midis = Button(FONT_MED.render("Clear MIDIs", 1, BLACK))
     button_load_midi = Button(FONT_MED.render("Load MIDIs", 1, BLACK))
 
@@ -84,8 +85,8 @@ class VideoDisp:
         self.time = 0
         self.frame = 0
         self.playing = False
-
         self.arrow_hold = 0
+        self.exporting = False
 
     def draw(self, window, events, loc, size):
         surface = pygame.transform.scale(self.video._render(self.frame), size)
@@ -95,10 +96,14 @@ class VideoDisp:
         window.blit(FONT_SMALL.render(f"Frame: {self.frame}", 1, WHITE), (loc[0]+10, loc[1]+10))
 
 
-        if self.button_clear_midis.draw(window, events, (loc[0]+size[0]+100, loc[1]), (160, 40)):
+        if self.button_export.draw(window, events, (loc[0]+size[0]+100, loc[1]), (160, 40)):
+            if not self.exporting and (path:=asksaveasfilename()):
+                self.exporting = True
+                self.video.export(path, multicore=True)
+        if self.button_clear_midis.draw(window, events, (loc[0]+size[0]+100, loc[1]+50), (160, 40)):
             self.video._midi_paths = []
             self.video._prep_render()
-        if self.button_load_midi.draw(window, events, (loc[0]+size[0]+100, loc[1]+50), (160, 40)):
+        if self.button_load_midi.draw(window, events, (loc[0]+size[0]+100, loc[1]+100), (160, 40)):
             self.video._midi_paths.extend(askopenfilenames())
             self.video._midi_paths = list(set(self.video._midi_paths))
             self.video._prep_render()
