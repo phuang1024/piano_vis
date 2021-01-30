@@ -116,7 +116,7 @@ class VideoDisp:
             window.blit(text, (loc[0]+size[0]+20, loc[1]+170+i*20))
 
         if self.exporting:
-            window.blit(FONT_SMALL.render("Exporting video", 1, WHITE), (loc[0]+30, loc[1]+10))
+            window.blit(FONT_SMALL.render("Exporting, look at the console for info.", 1, WHITE), (loc[0]+10, loc[1]+30))
             if not self.export_thread.is_alive():
                 self.exporting = False
             return
