@@ -113,7 +113,7 @@ class VideoDisp:
         for i, path in enumerate(self.video._midi_paths):
             name = os.path.basename(path)
             text = FONT_SMALL.render(name, 1, WHITE)
-            window.blit(text, (loc[0]+size[0]+20, loc[1]+120+i*20))
+            window.blit(text, (loc[0]+size[0]+20, loc[1]+170+i*20))
 
         if self.exporting:
             window.blit(FONT_SMALL.render("Exporting video", 1, WHITE), (loc[0]+30, loc[1]+10))
