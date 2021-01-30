@@ -15,6 +15,7 @@
 #
 # ##### END GPL LICENSE BLOCK #####
 
+import os
 import pygame
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename, askopenfilenames
@@ -99,7 +100,12 @@ class VideoDisp:
             self.video._prep_render()
         if self.button_load_midi.draw(window, events, (loc[0]+size[0]+100, loc[1]+50), (160, 40)):
             self.video._midi_paths.extend(askopenfilenames())
+            self.video._midi_paths = list(set(self.video._midi_paths))
             self.video._prep_render()
+        for i, path in enumerate(self.video._midi_paths):
+            name = os.path.basename(path)
+            text = FONT_SMALL.render(name, 1, WHITE)
+            window.blit(text, (loc[0]+size[0]+20, loc[1]+120+i*20))
 
         self.time += 1
         if self.playing:
