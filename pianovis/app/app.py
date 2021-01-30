@@ -105,22 +105,24 @@ class VideoDisp:
         if self.playing:
             self.frame += 1
 
+        keys = pygame.key.get_pressed()
+        ctrl_pressed = keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]
+
         for event in events:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.playing = not self.playing
                 elif event.key == pygame.K_RIGHT and not self.playing:
-                    self.frame += 1
+                    self.frame += 20 if ctrl_pressed else 1
                     self.arrow_hold = self.time
                 elif event.key == pygame.K_LEFT and not self.playing:
-                    self.frame -= 1
+                    self.frame -= 20 if ctrl_pressed else 1
                     self.arrow_hold = self.time
 
-        keys = pygame.key.get_pressed()
         if keys[pygame.K_RIGHT] and self.time-self.arrow_hold > 20:
-            self.frame += 1
+            self.frame += 20 if ctrl_pressed else 1
         if keys[pygame.K_LEFT] and self.time-self.arrow_hold > 20:
-            self.frame -= 1
+            self.frame -= 20 if ctrl_pressed else 1
 
         self.frame = max(self.frame, 0)
 
