@@ -181,9 +181,9 @@ class Video:
                 curr_frame += msg.time / tpb * tempo / 1000000 * self._fps
                 if msg.is_meta and msg.type == "set_tempo":
                     tempo = msg.tempo
-                elif msg.type == "note_on":
+                elif msg.type in ("note_on", "note_off"):
                     note, velocity = msg.note-21, msg.velocity
-                    if velocity == 0:
+                    if velocity == 0 or msg.type == "note_off":
                         self._notes.append((note, starts[note], curr_frame))
                     else:
                         starts[note] = curr_frame
